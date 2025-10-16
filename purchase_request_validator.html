@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>購入要求パラメータ検証ツール</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 1.5rem;
+      background: #f5f5f5;
+      color: #1f2933;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.75rem;
+      text-align: center;
+    }
+
+    form {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      padding: 1.5rem;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem 1.25rem;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      gap: 0.25rem;
+    }
+
+    label span.required::after {
+      content: " *";
+      color: #dc2626;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .actions {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      padding: 0.65rem 1.4rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(79, 70, 229, 0.3);
+    }
+
+    button.secondary {
+      background: none;
+      color: #1f2937;
+      border: 1px solid #94a3b8;
+      box-shadow: none;
+    }
+
+    .result-card {
+      max-width: 1080px;
+      margin: 1.5rem auto 0;
+      padding: 1.5rem;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .result-card h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: #1d4ed8;
+    }
+
+    .result-section {
+      margin-top: 1rem;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 10px;
+      overflow: auto;
+      font-size: 0.85rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+    }
+
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: #f8fafc;
+    }
+
+    .error-text {
+      color: #dc2626;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .copy-button {
+      background: #10b981;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      box-shadow: none;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      form, .result-card {
+        padding: 1.1rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>購入要求パラメータ検証ツール</h1>
+  <form id="request-form" autocomplete="off">
+    <div class="grid">
+      <label>
+        <span class="required">MerchantId</span>
+        <input type="text" name="merchant_id" required data-key="merchant_id" placeholder="例）123456789" class="param-input">
+      </label>
+      <label>
+        <span class="required">ServiceId</span>
+        <input type="text" name="service_id" required data-key="service_id" placeholder="例）001" class="param-input">
+      </label>
+      <label>
+        <span class="required">CustCode</span>
+        <input type="text" name="cust_code" required data-key="cust_code" placeholder="例）CUST0001" class="param-input">
+      </label>
+      <label>
+        <span class="required">OrderId</span>
+        <input type="text" name="order_id" required data-key="order_id" placeholder="例）ORDER0001" class="param-input">
+      </label>
+      <label>
+        <span class="required">ItemId</span>
+        <input type="text" name="item_id" required data-key="item_id" placeholder="例）ITEM0001" class="param-input">
+      </label>
+      <label>
+        <span class="required">ItemName</span>
+        <input type="text" name="item_name" required data-key="item_name" placeholder="例）サンプル商品" class="param-input">
+      </label>
+      <label>
+        <span class="required">Amount</span>
+        <input type="number" min="0" step="1" name="amount" required data-key="amount" placeholder="例）5500" class="param-input">
+      </label>
+      <label>
+        <span class="required">ProcessCode</span>
+        <input type="text" name="process_code" required data-key="process_code" placeholder="例）1" class="param-input">
+      </label>
+      <label>
+        <span>Tax</span>
+        <input type="number" min="0" step="1" name="tax" data-key="tax" placeholder="例）500" class="param-input">
+      </label>
+      <label>
+        <span>PayMethod</span>
+        <input type="text" name="pay_method" data-key="pay_method" placeholder="例）credit" class="param-input">
+      </label>
+      <label>
+        <span>SuccessUrl</span>
+        <input type="text" name="success_url" data-key="success_url" placeholder="https://example.com/success" class="param-input">
+      </label>
+      <label>
+        <span>CancelUrl</span>
+        <input type="text" name="cancel_url" data-key="cancel_url" placeholder="https://example.com/cancel" class="param-input">
+      </label>
+      <label>
+        <span>ErrorUrl</span>
+        <input type="text" name="error_url" data-key="error_url" placeholder="https://example.com/error" class="param-input">
+      </label>
+      <label>
+        <span>HashKey (SpsHashcode計算用)</span>
+        <input type="text" name="hash_key" data-key="hash_key" placeholder="提供されたHashKey" class="param-input">
+      </label>
+      <label>
+        <span>HashIV (任意)</span>
+        <input type="text" name="hash_iv" data-key="hash_iv" placeholder="提供されたHashIV" class="param-input">
+      </label>
+      <label>
+        <span>Memo1</span>
+        <input type="text" name="memo1" data-key="memo1" class="param-input">
+      </label>
+      <label>
+        <span>Memo2</span>
+        <input type="text" name="memo2" data-key="memo2" class="param-input">
+      </label>
+      <label>
+        <span>Free CSV (任意)
+        </span>
+        <textarea name="free_csv" data-key="free_csv" placeholder="key=value形式を改行区切りで入力"></textarea>
+      </label>
+    </div>
+
+    <details style="margin-top:1rem;">
+      <summary>カスタムパラメータを追加する</summary>
+      <div id="custom-params" class="result-section"></div>
+      <button type="button" class="secondary" id="add-param">＋ パラメータを追加</button>
+    </details>
+
+    <div class="actions">
+      <span id="error-summary" class="error-text" hidden></span>
+      <button type="submit">検証する</button>
+    </div>
+  </form>
+
+  <section id="result" class="result-card" hidden>
+    <div class="flex-between">
+      <h2>検証結果</h2>
+      <button type="button" class="copy-button" id="copy-request" hidden>値をコピー</button>
+    </div>
+    <div id="validation-messages" class="result-section"></div>
+    <div class="result-section">
+      <h3>送信パラメータ一覧</h3>
+      <table>
+        <thead>
+          <tr><th>キー</th><th>値</th></tr>
+        </thead>
+        <tbody id="param-table"></tbody>
+      </table>
+    </div>
+    <div class="result-section" id="hash-section" hidden>
+      <h3>SpsHashcode計算</h3>
+      <pre id="hash-string"></pre>
+      <div class="flex-between">
+        <span>SHA-256 (UTF-8) の16進表現</span>
+        <strong id="hash-result"></strong>
+      </div>
+    </div>
+    <div class="result-section">
+      <h3>URLクエリ文字列</h3>
+      <pre id="query-string"></pre>
+    </div>
+  </section>
+
+  <template id="custom-param-row">
+    <div class="grid" style="margin-top:0.75rem;">
+      <label>
+        <span>キー</span>
+        <input type="text" class="param-input" placeholder="custom_key" data-custom-key>
+      </label>
+      <label>
+        <span>値</span>
+        <input type="text" class="param-input" placeholder="custom_value" data-custom-value>
+      </label>
+      <div style="display:flex; align-items:flex-end;">
+        <button type="button" class="secondary remove-param" style="border-radius:8px;">削除</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const form = document.getElementById('request-form');
+    const resultCard = document.getElementById('result');
+    const paramTable = document.getElementById('param-table');
+    const queryStringEl = document.getElementById('query-string');
+    const hashSection = document.getElementById('hash-section');
+    const hashStringEl = document.getElementById('hash-string');
+    const hashResultEl = document.getElementById('hash-result');
+    const validationMessages = document.getElementById('validation-messages');
+    const errorSummary = document.getElementById('error-summary');
+    const copyButton = document.getElementById('copy-request');
+    const customParamsContainer = document.getElementById('custom-params');
+    const addParamButton = document.getElementById('add-param');
+    const rowTemplate = document.getElementById('custom-param-row');
+
+    addParamButton?.addEventListener('click', () => {
+      const node = rowTemplate.content.cloneNode(true);
+      customParamsContainer.appendChild(node);
+    });
+
+    customParamsContainer.addEventListener('click', (event) => {
+      if (event.target.classList.contains('remove-param')) {
+        const grid = event.target.closest('.grid');
+        grid?.remove();
+      }
+    });
+
+    function collectParameters(formData) {
+      const params = {};
+      form.querySelectorAll('.param-input').forEach((input) => {
+        const key = input.dataset.key;
+        if (!key) return;
+        const value = input.value.trim();
+        if (value !== '') {
+          params[key] = value;
+        }
+      });
+
+      form.querySelectorAll('[data-custom-key]').forEach((keyInput) => {
+        const key = keyInput.value.trim();
+        const valueInput = keyInput.closest('div.grid').querySelector('[data-custom-value]');
+        const value = valueInput?.value?.trim();
+        if (key && value !== undefined && value !== '') {
+          params[key] = value;
+        }
+      });
+
+      const freeCsv = formData.get('free_csv');
+      if (freeCsv) {
+        params['free_csv'] = freeCsv.trim();
+      }
+
+      return params;
+    }
+
+    function validateRequiredFields() {
+      const missing = [];
+      form.querySelectorAll('[required]').forEach((input) => {
+        if (!input.value.trim()) {
+          missing.push(input.previousElementSibling?.textContent?.replace('*', '').trim() || input.name);
+        }
+      });
+      return missing;
+    }
+
+    function buildQueryString(params) {
+      return Object.keys(params)
+        .filter((key) => !['hash_key', 'hash_iv'].includes(key))
+        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
+    }
+
+    function buildOrderedString(params) {
+      const canonicalOrder = [
+        'merchant_id', 'service_id', 'cust_code', 'order_id', 'item_id', 'item_name',
+        'tax', 'amount', 'process_code', 'pay_method', 'success_url', 'cancel_url',
+        'error_url', 'hash_iv', 'memo1', 'memo2'
+      ];
+
+      const knownValues = canonicalOrder
+        .filter((key) => params[key])
+        .map((key) => `${key}=${params[key]}`);
+
+      const remaining = Object.keys(params)
+        .filter((key) => !canonicalOrder.includes(key) && !['hash_key', 'hash_iv'].includes(key))
+        .sort()
+        .map((key) => `${key}=${params[key]}`);
+
+      return [...knownValues, ...remaining].join('&');
+    }
+
+    async function computeHash(data) {
+      const encoder = new TextEncoder();
+      const encoded = encoder.encode(data);
+      const buffer = await crypto.subtle.digest('SHA-256', encoded);
+      const view = new DataView(buffer);
+      let hex = '';
+      for (let i = 0; i < view.byteLength; i++) {
+        const value = view.getUint8(i).toString(16).padStart(2, '0');
+        hex += value;
+      }
+      return hex;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const missing = validateRequiredFields();
+      const params = collectParameters(formData);
+
+      validationMessages.innerHTML = '';
+      errorSummary.hidden = true;
+
+      if (missing.length > 0) {
+        errorSummary.textContent = `未入力の必須項目があります: ${missing.join(', ')}`;
+        errorSummary.hidden = false;
+        resultCard.hidden = true;
+        return;
+      }
+
+      resultCard.hidden = false;
+
+      paramTable.innerHTML = '';
+      Object.entries(params).forEach(([key, value]) => {
+        const tr = document.createElement('tr');
+        const tdKey = document.createElement('td');
+        tdKey.textContent = key;
+        const tdValue = document.createElement('td');
+        tdValue.textContent = value;
+        tr.appendChild(tdKey);
+        tr.appendChild(tdValue);
+        paramTable.appendChild(tr);
+      });
+
+      const queryString = buildQueryString(params);
+      queryStringEl.textContent = queryString || '(パラメータなし)';
+
+      const hashKey = params['hash_key'];
+      const baseString = buildOrderedString(params);
+
+      if (hashKey) {
+        const concatenated = `${baseString}&hash_key=${hashKey}`;
+        hashSection.hidden = false;
+        hashStringEl.textContent = concatenated || '(計算対象の文字列がありません)';
+        hashResultEl.textContent = await computeHash(concatenated);
+      } else {
+        hashSection.hidden = true;
+        hashStringEl.textContent = '';
+        hashResultEl.textContent = '';
+      }
+
+      copyButton.hidden = !queryString;
+      copyButton.dataset.text = queryString;
+
+      if (!queryString) {
+        validationMessages.innerHTML = '<p class="error-text">送信可能なパラメータがありません。</p>';
+      }
+    });
+
+    copyButton.addEventListener('click', async () => {
+      const text = copyButton.dataset.text || '';
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyButton.textContent = 'コピー済み';
+        setTimeout(() => {
+          copyButton.textContent = '値をコピー';
+        }, 2000);
+      } catch (error) {
+        alert('コピーに失敗しました。');
+      }
+    });
+  </script>
+</body>
+</html>
