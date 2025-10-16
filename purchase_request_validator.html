@@ -6,85 +6,100 @@
   <style>
     :root {
       color-scheme: light dark;
-      font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     }
 
     body {
       margin: 0;
-      padding: 1.5rem;
-      background: #f5f5f5;
-      color: #1f2933;
+      padding: 24px;
+      font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
     }
 
-    h1 {
-      margin-top: 0;
-      font-size: 1.75rem;
-      text-align: center;
-    }
-
-    form {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-      padding: 1.5rem;
-      max-width: 1080px;
+    main {
+      max-width: 1120px;
       margin: 0 auto;
     }
 
-    .param-section + .param-section {
-      margin-top: 1.5rem;
+    h1 {
+      margin: 0 0 16px;
+      font-size: 1.8rem;
+      text-align: center;
     }
 
-    .param-section h2 {
-      margin: 0 0 1rem;
-      font-size: 1.1rem;
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+
+    fieldset {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin: 0 0 20px;
+      padding: 16px 18px 20px;
+      background: #ffffff;
+    }
+
+    legend {
+      padding: 0 8px;
+      font-weight: 700;
       color: #1d4ed8;
     }
 
-    .section-note {
-      margin: 0 0 1rem;
-      font-size: 0.85rem;
-      color: #475569;
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem 1.25rem;
+    th,
+    td {
+      border-top: 1px solid #e5e7eb;
+      padding: 10px 12px;
+      vertical-align: top;
     }
 
-    label {
-      display: flex;
-      flex-direction: column;
-      font-size: 0.85rem;
+    tbody tr:first-child th,
+    tbody tr:first-child td {
+      border-top: none;
+    }
+
+    th {
+      width: 220px;
+      background: #f9fafb;
       font-weight: 600;
-      color: #334155;
-      gap: 0.25rem;
+      color: #1f2937;
     }
 
-    .grid-span {
-      grid-column: 1 / -1;
+    .seq {
+      display: inline-block;
+      min-width: 28px;
+      margin-right: 10px;
+      font-weight: 700;
+      color: #2563eb;
     }
 
-    label span.required::after {
-      content: " *";
-      color: #dc2626;
-    }
-
-    label small {
-      font-weight: 400;
-      color: #6b7280;
-    }
-
-    input[type="text"],
-    input[type="number"],
+    label,
     textarea,
+    input,
     select {
-      padding: 0.55rem 0.75rem;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
       font-size: 0.95rem;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-family: inherit;
+    }
+
+    textarea,
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 54px;
+      resize: vertical;
     }
 
     input:focus,
@@ -92,625 +107,699 @@
     select:focus {
       outline: none;
       border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
 
-    textarea {
-      resize: vertical;
-      min-height: 120px;
+    .note {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: #6b7280;
+      line-height: 1.5;
     }
 
     .actions {
-      margin-top: 1.5rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 10px;
       justify-content: flex-end;
-      align-items: center;
+      margin-top: 18px;
     }
 
     button {
       cursor: pointer;
       border: none;
       border-radius: 999px;
-      padding: 0.65rem 1.4rem;
+      padding: 9px 20px;
       font-weight: 600;
       background: linear-gradient(135deg, #2563eb, #4f46e5);
-      color: white;
-      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(79, 70, 229, 0.3);
+      color: #ffffff;
     }
 
     button.secondary {
       background: none;
       color: #1f2937;
       border: 1px solid #94a3b8;
-      box-shadow: none;
     }
 
-    .result-card {
-      max-width: 1080px;
-      margin: 1.5rem auto 0;
-      padding: 1.5rem;
+    button.small {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+    }
+
+    .detail-row {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #f9fafb;
+      position: relative;
+    }
+
+    .detail-row h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .detail-row button.remove-detail {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #fef2f2;
+      color: #b91c1c;
+      border-radius: 6px;
+      border: 1px solid #fecaca;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
+
+    .result-card,
+    .helper-card {
       background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 20px;
     }
 
-    .result-card h2 {
+    .result-card h2,
+    .helper-card h2 {
       margin-top: 0;
       font-size: 1.2rem;
-      color: #1d4ed8;
     }
 
-    .result-section {
-      margin-top: 1rem;
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .stack > * {
+      flex: 1 1 280px;
     }
 
     pre {
       background: #0f172a;
       color: #e2e8f0;
-      padding: 1rem;
-      border-radius: 10px;
+      padding: 12px;
+      border-radius: 8px;
       overflow: auto;
       font-size: 0.85rem;
     }
 
-    table {
+    .result-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 0.75rem;
     }
 
-    th, td {
-      border: 1px solid #e2e8f0;
-      padding: 0.45rem 0.6rem;
-      font-size: 0.85rem;
+    .result-table th,
+    .result-table td {
+      border-top: 1px solid #e5e7eb;
+      padding: 8px 10px;
       text-align: left;
+      vertical-align: top;
+      font-size: 0.9rem;
     }
 
-    tbody tr:nth-child(odd) {
-      background: #f8fafc;
+    .result-table thead th {
+      border-top: none;
+      background: #f3f4f6;
+      font-weight: 600;
     }
 
-    .error-text {
-      color: #dc2626;
+    .inline-label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.9rem;
+    }
+
+    .section-note {
+      margin: 4px 0 12px;
       font-size: 0.85rem;
-      margin-top: 0.25rem;
+      color: #6b7280;
     }
 
-    .flex-between {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .copy-button {
-      background: #10b981;
-      padding: 0.4rem 0.9rem;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      box-shadow: none;
-    }
-
-    .detail-rows > .grid + .grid {
-      margin-top: 1rem;
-    }
-
-    .detail-actions {
-      margin-top: 1rem;
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .detail-actions button {
-      border-radius: 8px;
-      padding: 0.55rem 1rem;
-    }
-
-    @media (max-width: 600px) {
+    @media (max-width: 720px) {
       body {
-        padding: 1rem;
+        padding: 16px;
       }
 
-      form, .result-card {
-        padding: 1.1rem;
+      th {
+        width: auto;
+        display: block;
       }
 
-      .grid {
-        grid-template-columns: 1fr;
+      td {
+        display: block;
+        border-top: none;
+        padding-top: 6px;
+      }
+
+      tr {
+        margin-bottom: 14px;
+        display: block;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 10px;
+      }
+
+      tr:first-child {
+        border-top: none;
+        padding-top: 0;
       }
     }
   </style>
 </head>
 <body>
+<main>
   <h1>購入要求パラメータ検証ツール</h1>
-  <form id="request-form" autocomplete="off">
-    <section class="param-section">
-      <h2>SEQ 1〜28（基本パラメータ）</h2>
-      <div class="grid">
-        <label>
-          <span>01 pay_method</span>
-          <input type="text" name="pay_method" data-key="pay_method" class="param-input" placeholder="例）credit">
-        </label>
-        <label>
-          <span class="required">02 merchant_id</span>
-          <input type="text" name="merchant_id" required data-key="merchant_id" class="param-input" placeholder="例）12345">
-        </label>
-        <label>
-          <span class="required">03 service_id</span>
-          <input type="text" name="service_id" required data-key="service_id" class="param-input" placeholder="例）001">
-        </label>
-        <label>
-          <span class="required">04 cust_code</span>
-          <input type="text" name="cust_code" required data-key="cust_code" class="param-input" placeholder="例）CUST0001">
-        </label>
-        <label>
-          <span>05 sps_cust_no</span>
-          <input type="text" name="sps_cust_no" data-key="sps_cust_no" class="param-input" placeholder="空文字可">
-        </label>
-        <label>
-          <span>06 sps_payment_no</span>
-          <input type="text" name="sps_payment_no" data-key="sps_payment_no" class="param-input" placeholder="空文字可">
-        </label>
-        <label>
-          <span class="required">07 order_id</span>
-          <input type="text" name="order_id" required data-key="order_id" class="param-input" placeholder="例）ORDER0001">
-        </label>
-        <label>
-          <span class="required">08 item_id</span>
-          <input type="text" name="item_id" required data-key="item_id" class="param-input" placeholder="例）ITEM0001">
-        </label>
-        <label>
-          <span>09 pay_item_id</span>
-          <input type="text" name="pay_item_id" data-key="pay_item_id" class="param-input">
-        </label>
-        <label>
-          <span>10 item_name</span>
-          <input type="text" name="item_name" data-key="item_name" class="param-input" placeholder="例）サンプル商品">
-        </label>
-        <label>
-          <span>11 tax</span>
-          <input type="number" min="0" step="1" name="tax" data-key="tax" class="param-input" placeholder="例）500">
-        </label>
-        <label>
-          <span class="required">12 amount</span>
-          <input type="number" min="0" step="1" name="amount" required data-key="amount" class="param-input" placeholder="例）5500">
-        </label>
-        <label>
-          <span class="required">13 pay_type</span>
-          <input type="text" name="pay_type" required data-key="pay_type" class="param-input" placeholder="0">
-        </label>
-        <label>
-          <span class="required">15 service_type</span>
-          <input type="text" name="service_type" required data-key="service_type" class="param-input" placeholder="0">
-        </label>
-        <label>
-          <span>20 terminal_type</span>
-          <input type="text" name="terminal_type" data-key="terminal_type" class="param-input" placeholder="0 または 1">
-        </label>
-        <label>
-          <span class="required">21 success_url</span>
-          <input type="text" name="success_url" required data-key="success_url" class="param-input" placeholder="https://example.com/success">
-        </label>
-        <label>
-          <span class="required">22 cancel_url</span>
-          <input type="text" name="cancel_url" required data-key="cancel_url" class="param-input" placeholder="https://example.com/cancel">
-        </label>
-        <label>
-          <span class="required">23 error_url</span>
-          <input type="text" name="error_url" required data-key="error_url" class="param-input" placeholder="https://example.com/error">
-        </label>
-        <label>
-          <span class="required">24 pagecon_url</span>
-          <input type="text" name="pagecon_url" required data-key="pagecon_url" class="param-input" placeholder="https://example.com/notify">
-        </label>
-        <label>
-          <span>25 free1</span>
-          <input type="text" name="free1" data-key="free1" class="param-input">
-        </label>
-        <label>
-          <span>26 free2</span>
-          <input type="text" name="free2" data-key="free2" class="param-input">
-        </label>
-        <label>
-          <span>27 free3</span>
-          <input type="text" name="free3" data-key="free3" class="param-input">
-        </label>
-        <label class="grid-span">
-          <span>28 free_csv</span>
-          <textarea name="free_csv" data-key="free_csv" class="param-input" placeholder="key=value形式を改行区切りで入力"></textarea>
-        </label>
-      </div>
-    </section>
+  <form id="request-form">
+    <fieldset>
+      <legend>基本パラメータ（SEQ 1〜28）</legend>
+      <table>
+        <tbody>
+          <tr data-seq="1">
+            <th><span class="seq">1</span>pay_method<br><small>支払方法</small></th>
+            <td>
+              <textarea data-param="pay_method" rows="2" placeholder="例：credit, webcvs"></textarea>
+              <p class="note">複数指定はカンマ区切りなど任意の表現で入力してください。</p>
+            </td>
+          </tr>
+          <tr data-seq="2">
+            <th><span class="seq">2</span>merchant_id<br><small>マーチャントID</small></th>
+            <td><input type="text" data-param="merchant_id" maxlength="5" placeholder="例：12345"></td>
+          </tr>
+          <tr data-seq="3">
+            <th><span class="seq">3</span>service_id<br><small>サービスID</small></th>
+            <td><input type="text" data-param="service_id" maxlength="3" placeholder="例：001"></td>
+          </tr>
+          <tr data-seq="4">
+            <th><span class="seq">4</span>cust_code<br><small>顧客ID</small></th>
+            <td><input type="text" data-param="cust_code" maxlength="64"></td>
+          </tr>
+          <tr data-seq="5">
+            <th><span class="seq">5</span>sps_cust_no<br><small>SBPS顧客ID</small></th>
+            <td><input type="text" data-param="sps_cust_no" maxlength="12"></td>
+          </tr>
+          <tr data-seq="6">
+            <th><span class="seq">6</span>sps_payment_no<br><small>支払方法管理番号</small></th>
+            <td><input type="text" data-param="sps_payment_no" maxlength="3"></td>
+          </tr>
+          <tr data-seq="7">
+            <th><span class="seq">7</span>order_id<br><small>購入ID</small></th>
+            <td><input type="text" data-param="order_id" maxlength="38"></td>
+          </tr>
+          <tr data-seq="8">
+            <th><span class="seq">8</span>item_id<br><small>商品ID</small></th>
+            <td><input type="text" data-param="item_id" maxlength="32"></td>
+          </tr>
+          <tr data-seq="9">
+            <th><span class="seq">9</span>pay_item_id<br><small>外部決済機関商品ID</small></th>
+            <td><input type="text" data-param="pay_item_id" maxlength="32"></td>
+          </tr>
+          <tr data-seq="10">
+            <th><span class="seq">10</span>item_name<br><small>商品名称</small></th>
+            <td><input type="text" data-param="item_name" maxlength="40"></td>
+          </tr>
+          <tr data-seq="11">
+            <th><span class="seq">11</span>tax<br><small>税額</small></th>
+            <td><input type="number" data-param="tax" min="0"></td>
+          </tr>
+          <tr data-seq="12">
+            <th><span class="seq">12</span>amount<br><small>金額（税込）</small></th>
+            <td><input type="number" data-param="amount" min="0"></td>
+          </tr>
+          <tr data-seq="13">
+            <th><span class="seq">13</span>pay_type<br><small>購入タイプ</small></th>
+            <td>
+              <select data-param="pay_type">
+                <option value="">-- 選択してください --</option>
+                <option value="0">0：都度課金</option>
+                <option value="1">1：継続課金（参考）</option>
+              </select>
+            </td>
+          </tr>
+          <tr data-seq="15">
+            <th><span class="seq">15</span>service_type<br><small>サービスタイプ</small></th>
+            <td>
+              <select data-param="service_type">
+                <option value="">-- 選択してください --</option>
+                <option value="0">0：売上（購入）</option>
+                <option value="1">1：仮売上（参考）</option>
+              </select>
+            </td>
+          </tr>
+          <tr data-seq="20">
+            <th><span class="seq">20</span>terminal_type<br><small>顧客利用端末タイプ</small></th>
+            <td>
+              <select data-param="terminal_type">
+                <option value="">（省略時は0）</option>
+                <option value="0">0：PC</option>
+                <option value="1">1：フィーチャーフォン</option>
+                <option value="2">2：スマートフォン</option>
+              </select>
+            </td>
+          </tr>
+          <tr data-seq="21">
+            <th><span class="seq">21</span>success_url<br><small>決済完了時URL</small></th>
+            <td><input type="text" data-param="success_url" placeholder="https://"></td>
+          </tr>
+          <tr data-seq="22">
+            <th><span class="seq">22</span>cancel_url<br><small>決済キャンセル時URL</small></th>
+            <td><input type="text" data-param="cancel_url" placeholder="https://"></td>
+          </tr>
+          <tr data-seq="23">
+            <th><span class="seq">23</span>error_url<br><small>エラー時URL</small></th>
+            <td><input type="text" data-param="error_url" placeholder="https://"></td>
+          </tr>
+          <tr data-seq="24">
+            <th><span class="seq">24</span>pagecon_url<br><small>決済通知用CGI</small></th>
+            <td><input type="text" data-param="pagecon_url" placeholder="https://"></td>
+          </tr>
+          <tr data-seq="25">
+            <th><span class="seq">25</span>free1<br><small>自由欄1</small></th>
+            <td><input type="text" data-param="free1" maxlength="20"></td>
+          </tr>
+          <tr data-seq="26">
+            <th><span class="seq">26</span>free2<br><small>自由欄2</small></th>
+            <td><input type="text" data-param="free2" maxlength="20"></td>
+          </tr>
+          <tr data-seq="27">
+            <th><span class="seq">27</span>free3<br><small>自由欄3</small></th>
+            <td><input type="text" data-param="free3" maxlength="20"></td>
+          </tr>
+          <tr data-seq="28">
+            <th><span class="seq">28</span>free_csv<br><small>フリー項目</small></th>
+            <td><textarea data-param="free_csv" rows="3"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </fieldset>
 
-    <section class="param-section">
-      <h2>SEQ 29〜37（明細行・任意）</h2>
-      <p class="section-note">必要な件数分を追加して入力してください。空欄の項目は送信されません。</p>
-      <div id="detail-rows" class="detail-rows"></div>
-      <div class="detail-actions">
-        <button type="button" class="secondary" id="add-detail">＋ 明細行を追加</button>
-        <button type="button" class="secondary" id="clear-details">明細行をすべて削除</button>
-      </div>
-    </section>
+    <fieldset id="detail-section">
+      <legend>明細行（SEQ 29〜37）</legend>
+      <p class="section-note">必要な件数分の明細を追加してください。空欄の項目は結果には含まれません。</p>
+      <div id="detail-rows"></div>
+      <button type="button" id="add-detail" class="secondary small">明細行を追加</button>
+    </fieldset>
 
-    <section class="param-section">
-      <h2>SEQ 38〜40</h2>
-      <div class="grid">
-        <label>
-          <span class="required">38 request_date</span>
-          <input type="text" name="request_date" required data-key="request_date" class="param-input" placeholder="YYYYMMDDHHMISS">
-        </label>
-        <label>
-          <span>39 limit_second</span>
-          <input type="number" min="0" step="1" name="limit_second" data-key="limit_second" class="param-input" placeholder="例）600">
-        </label>
-        <label>
-          <span>40 sps_hashcode</span>
-          <input type="text" name="sps_hashcode" data-key="sps_hashcode" class="param-input" placeholder="チェックサム値">
-        </label>
-      </div>
-    </section>
-
-    <section class="param-section">
-      <h2>ハッシュ計算支援</h2>
-      <p class="section-note">HashKey / HashIV は送信パラメータには含めず、検証時にのみ利用します。</p>
-      <div class="grid">
-        <label>
-          <span>HashKey</span>
-          <input type="text" name="hash_key" class="helper-input" placeholder="提供されたHashKey">
-        </label>
-        <label>
-          <span>HashIV (任意)</span>
-          <input type="text" name="hash_iv" class="helper-input" placeholder="提供されたHashIV">
-        </label>
-      </div>
-    </section>
-
-    <details style="margin-top:1.5rem;">
-      <summary>カスタムパラメータを追加する</summary>
-      <p class="section-note">SEQ項目以外の任意パラメータを追加できます。</p>
-      <div id="custom-params" class="result-section"></div>
-      <button type="button" class="secondary" id="add-param">＋ パラメータを追加</button>
-    </details>
+    <fieldset>
+      <legend>リクエスト制御（SEQ 38〜40）</legend>
+      <table>
+        <tbody>
+          <tr data-seq="38">
+            <th><span class="seq">38</span>request_date<br><small>リクエスト日時</small></th>
+            <td>
+              <div class="stack">
+                <input type="text" data-param="request_date" id="request-date" placeholder="YYYYMMDDHHMMSS" maxlength="14">
+                <button type="button" id="set-now" class="secondary small">現在時刻をセット</button>
+              </div>
+              <p class="note">例：20240101153000（JST）。現在時刻を自動でセットできます。</p>
+            </td>
+          </tr>
+          <tr data-seq="39">
+            <th><span class="seq">39</span>limit_second<br><small>リクエスト許容時間</small></th>
+            <td><input type="number" data-param="limit_second" id="limit-second" min="0" placeholder="例：600"></td>
+          </tr>
+          <tr data-seq="40">
+            <th><span class="seq">40</span>sps_hashcode<br><small>チェックサム</small></th>
+            <td><input type="text" data-param="sps_hashcode" maxlength="40"></td>
+          </tr>
+        </tbody>
+      </table>
+    </fieldset>
 
     <div class="actions">
-      <span id="error-summary" class="error-text" hidden></span>
-      <button type="submit">検証する</button>
+      <button type="submit">パラメータを生成</button>
+      <button type="button" id="reset-form" class="secondary">リセット</button>
     </div>
   </form>
 
-  <section id="result" class="result-card" hidden>
-    <div class="flex-between">
-      <h2>検証結果</h2>
-      <button type="button" class="copy-button" id="copy-request" hidden>値をコピー</button>
-    </div>
-    <div id="validation-messages" class="result-section"></div>
-    <div class="result-section">
-      <h3>送信パラメータ一覧</h3>
-      <table>
-        <thead>
-          <tr><th>キー</th><th>値</th></tr>
-        </thead>
-        <tbody id="param-table"></tbody>
-      </table>
-    </div>
-    <div class="result-section" id="hash-section" hidden>
-      <h3>SpsHashcode計算</h3>
-      <pre id="hash-string"></pre>
-      <div class="flex-between">
-        <span>SHA-256 (UTF-8) の16進表現</span>
-        <strong id="hash-result"></strong>
+  <section class="result-card">
+    <h2>整列済みパラメータ</h2>
+    <div class="stack">
+      <div>
+        <table class="result-table">
+          <thead>
+            <tr><th>SEQ</th><th>パラメータ</th><th>値</th></tr>
+          </thead>
+          <tbody id="result-table"></tbody>
+        </table>
       </div>
-    </div>
-    <div class="result-section">
-      <h3>URLクエリ文字列</h3>
-      <pre id="query-string"></pre>
+      <div>
+        <h3>クエリ文字列</h3>
+        <pre id="result-query"></pre>
+        <button type="button" id="copy-query" class="secondary small">コピー</button>
+      </div>
     </div>
   </section>
 
-  <template id="custom-param-row">
-    <div class="grid" style="margin-top:0.75rem;">
-      <label>
-        <span>キー</span>
-        <input type="text" class="param-input" placeholder="custom_key" data-custom-key>
+  <section class="helper-card">
+    <h2>SHA-256 チェックサム支援</h2>
+    <p class="note">フォームに入力済みの値（sps_hashcode を除く）を SEQ 順に連結し、末尾にシークレットキーを付けて SHA-256 を計算します。</p>
+    <div class="stack">
+      <label class="inline-label">シークレットキー
+        <input type="text" id="hash-secret" placeholder="加盟店シークレット">
       </label>
-      <label>
-        <span>値</span>
-        <input type="text" class="param-input" placeholder="custom_value" data-custom-value>
-      </label>
-      <div style="display:flex; align-items:flex-end;">
-        <button type="button" class="secondary remove-param" style="border-radius:8px;">削除</button>
-      </div>
     </div>
-  </template>
-
-  <template id="detail-row-template">
-    <div class="grid detail-row">
-      <label>
-        <span>29 dtl_rowno</span>
-        <input type="number" min="1" step="1" name="dtl_rowno" class="param-input" placeholder="1">
-      </label>
-      <label>
-        <span>30 dtl_item_id</span>
-        <input type="text" name="dtl_item_id" class="param-input">
-      </label>
-      <label>
-        <span>31 dtl_item_name</span>
-        <input type="text" name="dtl_item_name" class="param-input">
-      </label>
-      <label>
-        <span>32 dtl_item_count</span>
-        <input type="number" min="0" step="1" name="dtl_item_count" class="param-input">
-      </label>
-      <label>
-        <span>33 dtl_tax</span>
-        <input type="number" min="0" step="1" name="dtl_tax" class="param-input">
-      </label>
-      <label>
-        <span>34 dtl_amount</span>
-        <input type="number" min="0" step="1" name="dtl_amount" class="param-input">
-      </label>
-      <label>
-        <span>35 dtl_free1</span>
-        <input type="text" name="dtl_free1" class="param-input">
-      </label>
-      <label>
-        <span>36 dtl_free2</span>
-        <input type="text" name="dtl_free2" class="param-input">
-      </label>
-      <label>
-        <span>37 dtl_free3</span>
-        <input type="text" name="dtl_free3" class="param-input">
-      </label>
-      <div style="display:flex; align-items:flex-end;">
-        <button type="button" class="secondary remove-detail" style="border-radius:8px;">明細削除</button>
-      </div>
+    <div class="actions">
+      <button type="button" id="calc-hash">ハッシュを計算</button>
+      <button type="button" id="copy-hash" class="secondary small">チェックサムをコピー</button>
     </div>
-  </template>
+    <h3>連結文字列</h3>
+    <pre id="hash-string"></pre>
+    <h3>SHA-256（16進）</h3>
+    <pre id="hash-result"></pre>
+  </section>
 
-  <script>
-    const form = document.getElementById('request-form');
-    const resultCard = document.getElementById('result');
-    const paramTable = document.getElementById('param-table');
-    const queryStringEl = document.getElementById('query-string');
-    const hashSection = document.getElementById('hash-section');
-    const hashStringEl = document.getElementById('hash-string');
-    const hashResultEl = document.getElementById('hash-result');
-    const validationMessages = document.getElementById('validation-messages');
-    const errorSummary = document.getElementById('error-summary');
-    const copyButton = document.getElementById('copy-request');
-    const customParamsContainer = document.getElementById('custom-params');
-    const addParamButton = document.getElementById('add-param');
-    const rowTemplate = document.getElementById('custom-param-row');
-    const detailTemplate = document.getElementById('detail-row-template');
-    const detailRows = document.getElementById('detail-rows');
-    const addDetailButton = document.getElementById('add-detail');
-    const clearDetailsButton = document.getElementById('clear-details');
+  <section class="helper-card">
+    <h2>URL クエリ取り込み</h2>
+    <p class="note">サンドボックスなどで取得したクエリ文字列を貼り付けてフォームへ反映できます。</p>
+    <textarea id="import-query" rows="4" placeholder="example=foo&amount=100"></textarea>
+    <div class="actions">
+      <button type="button" id="apply-query" class="secondary">フォームに反映</button>
+    </div>
+  </section>
+</main>
 
-    const BASE_KEYS = [
-      'pay_method', 'merchant_id', 'service_id', 'cust_code', 'sps_cust_no', 'sps_payment_no',
-      'order_id', 'item_id', 'pay_item_id', 'item_name', 'tax', 'amount', 'pay_type',
-      'service_type', 'terminal_type', 'success_url', 'cancel_url', 'error_url', 'pagecon_url',
-      'free1', 'free2', 'free3', 'free_csv'
-    ];
+<template id="detail-template">
+  <div class="detail-row">
+    <h3><span class="detail-index"></span>件目</h3>
+    <div class="detail-grid">
+      <label class="inline-label">SEQ29 dtl_rowno
+        <input type="text" data-param="dtl_rowno" maxlength="3">
+      </label>
+      <label class="inline-label">SEQ30 dtl_item_id
+        <input type="text" data-param="dtl_item_id" maxlength="20">
+      </label>
+      <label class="inline-label">SEQ31 dtl_item_name
+        <input type="text" data-param="dtl_item_name" maxlength="40">
+      </label>
+      <label class="inline-label">SEQ32 dtl_item_count
+        <input type="number" data-param="dtl_item_count" min="0">
+      </label>
+      <label class="inline-label">SEQ33 dtl_tax
+        <input type="number" data-param="dtl_tax" min="0">
+      </label>
+      <label class="inline-label">SEQ34 dtl_amount
+        <input type="number" data-param="dtl_amount" min="0">
+      </label>
+      <label class="inline-label">SEQ35 dtl_free1
+        <textarea data-param="dtl_free1" rows="2"></textarea>
+      </label>
+      <label class="inline-label">SEQ36 dtl_free2
+        <textarea data-param="dtl_free2" rows="2"></textarea>
+      </label>
+      <label class="inline-label">SEQ37 dtl_free3
+        <textarea data-param="dtl_free3" rows="2"></textarea>
+      </label>
+    </div>
+    <button type="button" class="remove-detail">削除</button>
+  </div>
+</template>
 
-    const DETAIL_KEYS = [
-      'dtl_rowno', 'dtl_item_id', 'dtl_item_name', 'dtl_item_count',
-      'dtl_tax', 'dtl_amount', 'dtl_free1', 'dtl_free2', 'dtl_free3'
-    ];
+<script>
+  const PARAM_DEFS = [
+    { seq: 1, name: 'pay_method' },
+    { seq: 2, name: 'merchant_id' },
+    { seq: 3, name: 'service_id' },
+    { seq: 4, name: 'cust_code' },
+    { seq: 5, name: 'sps_cust_no' },
+    { seq: 6, name: 'sps_payment_no' },
+    { seq: 7, name: 'order_id' },
+    { seq: 8, name: 'item_id' },
+    { seq: 9, name: 'pay_item_id' },
+    { seq: 10, name: 'item_name' },
+    { seq: 11, name: 'tax' },
+    { seq: 12, name: 'amount' },
+    { seq: 13, name: 'pay_type' },
+    { seq: 15, name: 'service_type' },
+    { seq: 20, name: 'terminal_type' },
+    { seq: 21, name: 'success_url' },
+    { seq: 22, name: 'cancel_url' },
+    { seq: 23, name: 'error_url' },
+    { seq: 24, name: 'pagecon_url' },
+    { seq: 25, name: 'free1' },
+    { seq: 26, name: 'free2' },
+    { seq: 27, name: 'free3' },
+    { seq: 28, name: 'free_csv' },
+    { seq: 38, name: 'request_date' },
+    { seq: 39, name: 'limit_second' },
+    { seq: 40, name: 'sps_hashcode' }
+  ];
 
-    const FINAL_KEYS = ['request_date', 'limit_second', 'sps_hashcode'];
+  const DETAIL_DEFS = [
+    { seq: 29, name: 'dtl_rowno' },
+    { seq: 30, name: 'dtl_item_id' },
+    { seq: 31, name: 'dtl_item_name' },
+    { seq: 32, name: 'dtl_item_count' },
+    { seq: 33, name: 'dtl_tax' },
+    { seq: 34, name: 'dtl_amount' },
+    { seq: 35, name: 'dtl_free1' },
+    { seq: 36, name: 'dtl_free2' },
+    { seq: 37, name: 'dtl_free3' }
+  ];
 
-    addParamButton?.addEventListener('click', () => {
-      const node = rowTemplate.content.cloneNode(true);
-      customParamsContainer.appendChild(node);
-    });
+  const form = document.getElementById('request-form');
+  const detailContainer = document.getElementById('detail-rows');
+  const detailTemplate = document.getElementById('detail-template');
+  const resultTable = document.getElementById('result-table');
+  const resultQuery = document.getElementById('result-query');
+  const hashString = document.getElementById('hash-string');
+  const hashResult = document.getElementById('hash-result');
+  const hashSecret = document.getElementById('hash-secret');
+  const requestDateField = document.getElementById('request-date');
+  const limitSecondField = document.getElementById('limit-second');
 
-    customParamsContainer.addEventListener('click', (event) => {
-      if (event.target.classList.contains('remove-param')) {
-        const grid = event.target.closest('.grid');
-        grid?.remove();
+  document.getElementById('add-detail').addEventListener('click', () => addDetailRow());
+  document.getElementById('reset-form').addEventListener('click', resetForm);
+  document.getElementById('set-now').addEventListener('click', () => {
+    requestDateField.value = formatNow();
+  });
+  document.getElementById('copy-query').addEventListener('click', () => copyToClipboard(resultQuery.textContent));
+  document.getElementById('calc-hash').addEventListener('click', calculateHash);
+  document.getElementById('copy-hash').addEventListener('click', () => copyToClipboard(hashResult.textContent));
+  document.getElementById('apply-query').addEventListener('click', applyQueryString);
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const params = collectParameters();
+    renderResultTable(params);
+    renderQuery(params);
+  });
+
+  function formatNow() {
+    const now = new Date();
+    const pad = (v) => String(v).padStart(2, '0');
+    return [
+      now.getFullYear(),
+      pad(now.getMonth() + 1),
+      pad(now.getDate()),
+      pad(now.getHours()),
+      pad(now.getMinutes()),
+      pad(now.getSeconds())
+    ].join('');
+  }
+
+  function addDetailRow(defaults = {}) {
+    const fragment = detailTemplate.content.cloneNode(true);
+    const row = fragment.querySelector('.detail-row');
+    detailContainer.appendChild(fragment);
+    updateDetailRowIndexes();
+    const insertedRow = detailContainer.lastElementChild;
+    insertedRow.querySelectorAll('[data-param]').forEach((input) => {
+      const name = input.dataset.param;
+      if (Object.prototype.hasOwnProperty.call(defaults, name)) {
+        input.value = defaults[name];
+      } else {
+        input.value = '';
       }
     });
-
-    addDetailButton.addEventListener('click', () => {
-      const node = detailTemplate.content.cloneNode(true);
-      detailRows.appendChild(node);
+    insertedRow.querySelector('.remove-detail').addEventListener('click', () => {
+      insertedRow.remove();
+      updateDetailRowIndexes();
     });
+    return insertedRow;
+  }
 
-    clearDetailsButton.addEventListener('click', () => {
-      detailRows.innerHTML = '';
-    });
-
-    detailRows.addEventListener('click', (event) => {
-      if (event.target.classList.contains('remove-detail')) {
-        const row = event.target.closest('.detail-row');
-        row?.remove();
+  function updateDetailRowIndexes() {
+    const rows = detailContainer.querySelectorAll('.detail-row');
+    rows.forEach((row, index) => {
+      row.dataset.index = String(index + 1);
+      const label = row.querySelector('.detail-index');
+      if (label) {
+        label.textContent = index + 1;
       }
     });
+  }
 
-    function collectParameters() {
-      const entries = [];
+  function resetForm() {
+    form.reset();
+    detailContainer.innerHTML = '';
+    resultTable.innerHTML = '';
+    resultQuery.textContent = '';
+    hashString.textContent = '';
+    hashResult.textContent = '';
+    requestDateField.value = formatNow();
+    limitSecondField.value = '600';
+    hashSecret.value = '';
+    document.getElementById('import-query').value = '';
+  }
 
-      BASE_KEYS.forEach((key) => {
-        if (DETAIL_KEYS.includes(key)) {
-          return;
-        }
-        const element = form.elements.namedItem(key);
-        if (!element) {
-          return;
-        }
-        if (element instanceof RadioNodeList) {
-          const value = element.value?.trim();
-          if (value) {
-            entries.push([key, value]);
-          }
-        } else {
-          const value = element.value.trim();
-          if (value !== '') {
-            entries.push([key, value]);
-          }
-        }
+  function collectParameters() {
+    const params = [];
+    for (const def of PARAM_DEFS) {
+      const field = document.querySelector(`[data-param="${def.name}"]`);
+      if (!field) continue;
+      const value = (field.value ?? '').trim();
+      if (value === '') continue;
+      params.push({ ...def, value });
+    }
+
+    const detailRows = Array.from(detailContainer.querySelectorAll('.detail-row'));
+    detailRows.forEach((row, rowIndex) => {
+      DETAIL_DEFS.forEach((def) => {
+        const field = row.querySelector(`[data-param="${def.name}"]`);
+        if (!field) return;
+        const value = (field.value ?? '').trim();
+        if (value === '') return;
+        params.push({ seq: def.seq, name: def.name, value, detailIndex: rowIndex + 1 });
       });
+    });
 
-      const detailRowNodes = Array.from(detailRows.querySelectorAll('.detail-row'));
-      detailRowNodes.forEach((row) => {
-        DETAIL_KEYS.forEach((key) => {
-          const field = row.querySelector(`[name="${key}"]`);
-          if (!field) return;
-          const value = field.value.trim();
-          if (value !== '') {
-            entries.push([key, value]);
+    params.sort((a, b) => {
+      if (a.seq === b.seq) {
+        const ai = a.detailIndex ?? 0;
+        const bi = b.detailIndex ?? 0;
+        return ai - bi;
+      }
+      return a.seq - b.seq;
+    });
+
+    return params;
+  }
+
+  function renderResultTable(params) {
+    resultTable.innerHTML = '';
+    params.forEach((param) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${param.seq}</td><td>${escapeHtml(param.name)}</td><td>${escapeHtml(param.value)}</td>`;
+      resultTable.appendChild(tr);
+    });
+  }
+
+  function renderQuery(params) {
+    const query = params
+      .map((param) => `${encodeURIComponent(param.name)}=${encodeURIComponent(param.value)}`)
+      .join('&');
+    resultQuery.textContent = query;
+  }
+
+  async function calculateHash() {
+    const secret = hashSecret.value || '';
+    const params = collectParameters().filter((param) => param.name !== 'sps_hashcode');
+    const base = params.map((param) => param.value).join('') + secret;
+    hashString.textContent = base;
+
+    if (!window.crypto || !window.crypto.subtle) {
+      hashResult.textContent = 'このブラウザでは SubtleCrypto が利用できません。';
+      return;
+    }
+
+    const encoder = new TextEncoder();
+    const data = encoder.encode(base);
+    try {
+      const digest = await window.crypto.subtle.digest('SHA-256', data);
+      hashResult.textContent = toHexString(new Uint8Array(digest));
+    } catch (error) {
+      hashResult.textContent = `ハッシュ計算に失敗しました: ${error.message ?? error}`;
+    }
+  }
+
+  function toHexString(bytes) {
+    return Array.from(bytes)
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+  function applyQueryString() {
+    const raw = (document.getElementById('import-query').value || '').trim();
+    if (!raw) return;
+    const query = raw.startsWith('?') ? raw.slice(1) : raw;
+    const params = new URLSearchParams(query);
+
+    const detailValues = new Map();
+
+    params.forEach((value, key) => {
+      if (DETAIL_DEFS.some((def) => def.name === key)) {
+        if (!detailValues.has(key)) {
+          detailValues.set(key, []);
+        }
+        detailValues.get(key).push(value);
+      } else {
+        const field = document.querySelector(`[data-param="${key}"]`);
+        if (field) {
+          field.value = value;
+        }
+      }
+    });
+
+    detailContainer.innerHTML = '';
+
+    if (detailValues.size > 0) {
+      const lengths = Array.from(detailValues.values()).map((values) => values.length);
+      const maxLength = lengths.length ? Math.max(...lengths) : 0;
+      for (let i = 0; i < maxLength; i += 1) {
+        const defaults = {};
+        DETAIL_DEFS.forEach((def) => {
+          const list = detailValues.get(def.name);
+          if (list && list[i] !== undefined) {
+            defaults[def.name] = list[i];
           }
         });
-      });
-
-      FINAL_KEYS.forEach((key) => {
-        const element = form.elements.namedItem(key);
-        if (!element) {
-          return;
-        }
-        if (element instanceof RadioNodeList) {
-          const value = element.value?.trim();
-          if (value) {
-            entries.push([key, value]);
-          }
-        } else {
-          const value = element.value.trim();
-          if (value !== '') {
-            entries.push([key, value]);
-          }
-        }
-      });
-
-      form.querySelectorAll('[data-custom-key]').forEach((keyInput) => {
-        const key = keyInput.value.trim();
-        const valueInput = keyInput.closest('.grid').querySelector('[data-custom-value]');
-        const value = valueInput?.value?.trim();
-        if (key && value) {
-          entries.push([key, value]);
-        }
-      });
-
-      return entries;
-    }
-
-    function validateRequiredFields() {
-      const missing = [];
-      form.querySelectorAll('[required]').forEach((input) => {
-        if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) {
-          return;
-        }
-        if (!input.value.trim()) {
-          const label = input.closest('label');
-          const labelText = label?.querySelector('span')?.textContent || input.name;
-          missing.push(labelText.trim());
-        }
-      });
-      return missing;
-    }
-
-    function buildQueryString(entries) {
-      return entries
-        .filter(([key]) => key !== 'hash_key' && key !== 'hash_iv')
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-        .join('&');
-    }
-
-    function buildOrderedString(entries) {
-      const filtered = entries.filter(([key]) => !['hash_key', 'hash_iv', 'sps_hashcode'].includes(key));
-      return filtered.map(([key, value]) => `${key}=${value}`).join('&');
-    }
-
-    async function computeHash(data) {
-      const encoder = new TextEncoder();
-      const encoded = encoder.encode(data);
-      const buffer = await crypto.subtle.digest('SHA-256', encoded);
-      const view = new DataView(buffer);
-      let hex = '';
-      for (let i = 0; i < view.byteLength; i++) {
-        hex += view.getUint8(i).toString(16).padStart(2, '0');
+        addDetailRow(defaults);
       }
-      return hex;
     }
+  }
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const missing = validateRequiredFields();
-      const entries = collectParameters();
-
-      validationMessages.innerHTML = '';
-      errorSummary.hidden = true;
-
-      if (missing.length > 0) {
-        errorSummary.textContent = `未入力の必須項目があります: ${missing.join(', ')}`;
-        errorSummary.hidden = false;
-        resultCard.hidden = true;
-        return;
-      }
-
-      resultCard.hidden = false;
-
-      paramTable.innerHTML = '';
-      entries.forEach(([key, value]) => {
-        const tr = document.createElement('tr');
-        const tdKey = document.createElement('td');
-        tdKey.textContent = key;
-        const tdValue = document.createElement('td');
-        tdValue.textContent = value;
-        tr.appendChild(tdKey);
-        tr.appendChild(tdValue);
-        paramTable.appendChild(tr);
+  function copyToClipboard(text) {
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {
+        fallbackCopy(text);
       });
+    } else {
+      fallbackCopy(text);
+    }
+  }
 
-      const queryString = buildQueryString(entries);
-      queryStringEl.textContent = queryString || '(パラメータなし)';
+  function fallbackCopy(text) {
+    const temp = document.createElement('textarea');
+    temp.value = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+  }
 
-      const hashKey = form.elements.namedItem('hash_key')?.value.trim();
-      const hashIv = form.elements.namedItem('hash_iv')?.value.trim();
-      const baseString = buildOrderedString(entries);
+  function escapeHtml(value) {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/\n/g, '<br>');
+  }
 
-      if (hashKey && baseString) {
-        const concatenated = hashIv ? `${hashIv}&${baseString}&hash_key=${hashKey}` : `${baseString}&hash_key=${hashKey}`;
-        hashSection.hidden = false;
-        hashStringEl.textContent = concatenated;
-        hashResultEl.textContent = await computeHash(concatenated);
-      } else {
-        hashSection.hidden = true;
-        hashStringEl.textContent = '';
-        hashResultEl.textContent = '';
-      }
-
-      copyButton.hidden = !queryString;
-      copyButton.dataset.text = queryString;
-
-      if (!queryString) {
-        validationMessages.innerHTML = '<p class="error-text">送信可能なパラメータがありません。</p>';
-      }
-    });
-
-    copyButton.addEventListener('click', async () => {
-      const text = copyButton.dataset.text || '';
-      if (!text) return;
-      try {
-        await navigator.clipboard.writeText(text);
-        copyButton.textContent = 'コピー済み';
-        setTimeout(() => {
-          copyButton.textContent = '値をコピー';
-        }, 2000);
-      } catch (error) {
-        alert('コピーに失敗しました。');
-      }
-    });
-  </script>
+  // 初期化
+  resetForm();
+</script>
 </body>
 </html>
