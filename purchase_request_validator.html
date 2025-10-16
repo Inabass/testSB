@@ -437,6 +437,7 @@
 
     <div class="actions">
       <button type="submit">パラメータを生成</button>
+      <button type="button" id="send-request">リクエスト送信</button>
       <button type="button" id="reset-form" class="secondary">リセット</button>
     </div>
   </form>
@@ -524,6 +525,8 @@
   </div>
 </template>
 
+<form id="submit-proxy" method="POST" action="https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do" target="_blank" style="display: none;"></form>
+
 <script>
   const PARAM_DEFS = [
     { seq: 1, name: 'pay_method' },
@@ -579,6 +582,7 @@
 
   document.getElementById('add-detail').addEventListener('click', () => addDetailRow());
   document.getElementById('reset-form').addEventListener('click', resetForm);
+  document.getElementById('send-request').addEventListener('click', sendRequest);
   document.getElementById('set-now').addEventListener('click', () => {
     requestDateField.value = formatNow();
   });
@@ -699,6 +703,27 @@
       .map((param) => `${encodeURIComponent(param.name)}=${encodeURIComponent(param.value)}`)
       .join('&');
     resultQuery.textContent = query;
+  }
+
+  function sendRequest() {
+    const params = collectParameters();
+    if (params.length === 0) {
+      alert('送信するパラメータがありません。');
+      return;
+    }
+
+    const proxyForm = document.getElementById('submit-proxy');
+    proxyForm.innerHTML = '';
+
+    params.forEach((param) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = param.name;
+      input.value = param.value;
+      proxyForm.appendChild(input);
+    });
+
+    proxyForm.requestSubmit();
   }
 
   async function calculateHash() {
