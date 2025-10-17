@@ -257,6 +257,11 @@
       color: #ffffff;
     }
 
+    .field-error {
+      border-color: #f87171 !important;
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25) !important;
+    }
+
     button.secondary {
       background: none;
       color: #1f2937;
@@ -653,7 +658,14 @@
   </div>
 </template>
 
-<form id="submit-proxy" method="POST" action="https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do" target="_blank" style="display: none;"></form>
+<form
+  id="submit-proxy"
+  method="POST"
+  action="https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do"
+  target="_blank"
+  accept-charset="Shift_JIS"
+  style="display: none;"
+></form>
 
 <script>
   const PARAM_DEFS = [
@@ -701,6 +713,44 @@
     required: { label: '必須', className: 'req-required', description: '必須項目です。' },
     conditional: { label: '条件付必須', className: 'req-conditional', description: '条件によって必須となる項目です。' },
     optional: { label: '任意', className: 'req-optional', description: '任意項目です。' }
+  };
+
+  const PARAM_LABELS = {
+    pay_method: 'pay_method（支払方法）',
+    merchant_id: 'merchant_id（マーチャントID）',
+    service_id: 'service_id（サービスID）',
+    cust_code: 'cust_code（顧客ID）',
+    sps_cust_no: 'sps_cust_no（SBPS顧客ID）',
+    sps_payment_no: 'sps_payment_no（支払方法管理番号）',
+    order_id: 'order_id（購入ID）',
+    item_id: 'item_id（商品ID）',
+    pay_item_id: 'pay_item_id（外部決済機関商品ID）',
+    item_name: 'item_name（商品名称）',
+    tax: 'tax（税額）',
+    amount: 'amount（金額税込）',
+    pay_type: 'pay_type（購入タイプ）',
+    service_type: 'service_type（サービスタイプ）',
+    terminal_type: 'terminal_type（顧客利用端末タイプ）',
+    success_url: 'success_url（決済完了時URL）',
+    cancel_url: 'cancel_url（決済キャンセル時URL）',
+    error_url: 'error_url（エラー時URL）',
+    pagecon_url: 'pagecon_url（決済通知用CGI）',
+    free1: 'free1（自由欄1）',
+    free2: 'free2（自由欄2）',
+    free3: 'free3（自由欄3）',
+    free_csv: 'free_csv（フリー項目）',
+    dtl_rowno: 'dtl_rowno（明細行番号）',
+    dtl_item_id: 'dtl_item_id（明細商品ID）',
+    dtl_item_name: 'dtl_item_name（明細商品名称）',
+    dtl_item_count: 'dtl_item_count（明細数量）',
+    dtl_tax: 'dtl_tax（明細税額）',
+    dtl_amount: 'dtl_amount（明細金額）',
+    dtl_free1: 'dtl_free1（明細自由欄1）',
+    dtl_free2: 'dtl_free2（明細自由欄2）',
+    dtl_free3: 'dtl_free3（明細自由欄3）',
+    request_date: 'request_date（リクエスト日時）',
+    limit_second: 'limit_second（リクエスト許容時間）',
+    sps_hashcode: 'sps_hashcode（チェックサム）'
   };
 
   const PARAM_REQUIREMENTS = {
@@ -795,11 +845,14 @@
   document.getElementById('send-request').addEventListener('click', sendRequest);
   document.getElementById('set-now').addEventListener('click', () => {
     requestDateField.value = formatNow();
+    requestDateField.classList.remove('field-error');
   });
   document.getElementById('copy-query').addEventListener('click', () => copyToClipboard(resultQuery.textContent));
   document.getElementById('calc-hash').addEventListener('click', calculateHash);
   document.getElementById('copy-hash').addEventListener('click', () => copyToClipboard(hashResult.textContent));
   document.getElementById('apply-query').addEventListener('click', applyQueryString);
+
+  attachFieldListeners(document);
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -861,6 +914,7 @@
     updateDetailRowIndexes();
     const insertedRow = detailContainer.lastElementChild;
     applyTooltips(insertedRow);
+    attachFieldListeners(insertedRow);
     insertedRow.querySelectorAll('[data-param]').forEach((input) => {
       const name = input.dataset.param;
       if (Object.prototype.hasOwnProperty.call(defaults, name)) {
@@ -898,6 +952,7 @@
     limitSecondField.value = '600';
     hashSecret.value = '';
     document.getElementById('import-query').value = '';
+    clearFieldErrors();
   }
 
   function collectParameters() {
@@ -933,6 +988,52 @@
     return params;
   }
 
+  function findMissingRequiredFields() {
+    const missing = [];
+    for (const def of PARAM_DEFS) {
+      const requirement = PARAM_REQUIREMENTS[def.name];
+      if (requirement !== 'required') continue;
+      const field = document.querySelector(`[data-param="${def.name}"]`);
+      if (!field) continue;
+      const value = (field.value ?? '').trim();
+      if (value === '') {
+        missing.push(def);
+      }
+    }
+    return missing;
+  }
+
+  function markMissingRequiredFields(missing) {
+    const missingNames = new Set(missing.map((def) => def.name));
+    document.querySelectorAll('[data-param]').forEach((input) => {
+      if (missingNames.has(input.dataset.param)) {
+        input.classList.add('field-error');
+      } else {
+        input.classList.remove('field-error');
+      }
+    });
+  }
+
+  function clearFieldErrors() {
+    document.querySelectorAll('.field-error').forEach((input) => {
+      input.classList.remove('field-error');
+    });
+  }
+
+  function attachFieldListeners(root) {
+    root.querySelectorAll('[data-param]').forEach((input) => {
+      input.addEventListener('input', () => {
+        input.classList.remove('field-error');
+      });
+    });
+  }
+
+  function formatRequiredMessage(missing) {
+    return missing
+      .map((def) => `・SEQ${def.seq} ${PARAM_LABELS[def.name] || def.name}`)
+      .join('\n');
+  }
+
   function renderResultTable(params) {
     resultTable.innerHTML = '';
     params.forEach((param) => {
@@ -950,11 +1051,22 @@
   }
 
   function sendRequest() {
+    const missingRequired = findMissingRequiredFields();
+    markMissingRequiredFields(missingRequired);
+    if (missingRequired.length > 0) {
+      const message = formatRequiredMessage(missingRequired);
+      alert(`以下の必須項目を入力してください:\n${message}`);
+      return;
+    }
+
     const params = collectParameters();
     if (params.length === 0) {
       alert('送信するパラメータがありません。');
       return;
     }
+
+    renderResultTable(params);
+    renderQuery(params);
 
     const proxyForm = document.getElementById('submit-proxy');
     proxyForm.innerHTML = '';
@@ -967,7 +1079,11 @@
       proxyForm.appendChild(input);
     });
 
-    proxyForm.requestSubmit();
+    if (typeof proxyForm.requestSubmit === 'function') {
+      proxyForm.requestSubmit();
+    } else {
+      proxyForm.submit();
+    }
   }
 
   async function calculateHash() {
