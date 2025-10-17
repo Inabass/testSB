@@ -478,8 +478,8 @@
   </section>
 
   <section class="helper-card">
-    <h2>SHA-256 チェックサム支援</h2>
-    <p class="note">フォームに入力済みの値（sps_hashcode を除く）を SEQ 順に連結し、末尾にシークレットキーを付けて SHA-256 を計算します。</p>
+    <h2>SHA-1 チェックサム支援</h2>
+    <p class="note">フォームに入力済みの値（sps_hashcode を除く）を SEQ 順に連結し、末尾にシークレットキーを付けて UTF-8 へ変換し、SHA-1 を計算します。値の前後にある半角スペースは除去されます。購入結果（画面返却）のチェックサムは Shift-JIS で計算される点にご注意ください。</p>
     <div class="stack">
       <label class="inline-label">シークレットキー
         <input type="text" id="hash-secret" placeholder="加盟店シークレット">
@@ -491,7 +491,7 @@
     </div>
     <h3>連結文字列</h3>
     <pre id="hash-string"></pre>
-    <h3>SHA-256（16進）</h3>
+    <h3>SHA-1（16進）</h3>
     <pre id="hash-result"></pre>
   </section>
 
@@ -756,7 +756,7 @@
     const encoder = new TextEncoder();
     const data = encoder.encode(base);
     try {
-      const digest = await window.crypto.subtle.digest('SHA-256', data);
+      const digest = await window.crypto.subtle.digest('SHA-1', data);
       hashResult.textContent = toHexString(new Uint8Array(digest));
     } catch (error) {
       hashResult.textContent = `ハッシュ計算に失敗しました: ${error.message ?? error}`;
