@@ -78,6 +78,72 @@
       color: #2563eb;
     }
 
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      margin-left: 6px;
+      border-radius: 999px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: help;
+      position: relative;
+      transition: box-shadow 0.15s ease;
+    }
+
+    .info-icon:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+    }
+
+    .info-icon::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 12px);
+      transform: translate(-50%, -6px);
+      background: #111827;
+      color: #f9fafb;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      min-width: 200px;
+      max-width: 320px;
+      white-space: pre-wrap;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 40;
+    }
+
+    .info-icon::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 6px);
+      transform: translate(-50%, -6px);
+      border-width: 6px;
+      border-style: solid;
+      border-color: transparent;
+      border-top-color: #111827;
+      opacity: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .info-icon:hover::after,
+    .info-icon:focus::after,
+    .info-icon:hover::before,
+    .info-icon:focus::before {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
     label,
     textarea,
     input,
@@ -301,58 +367,58 @@
       <table>
         <tbody>
           <tr data-seq="1">
-            <th><span class="seq">1</span>pay_method<br><small>支払方法</small></th>
+            <th><span class="seq">1</span>pay_method<span class="info-icon" data-note-key="pay_method" tabindex="0" role="img"></span><br><small>支払方法</small></th>
             <td>
               <textarea data-param="pay_method" rows="2" placeholder="例：credit, webcvs"></textarea>
               <p class="note">複数指定はカンマ区切りなど任意の表現で入力してください。</p>
             </td>
           </tr>
           <tr data-seq="2">
-            <th><span class="seq">2</span>merchant_id<br><small>マーチャントID</small></th>
+            <th><span class="seq">2</span>merchant_id<span class="info-icon" data-note-key="merchant_id" tabindex="0" role="img"></span><br><small>マーチャントID</small></th>
             <td><input type="text" data-param="merchant_id" maxlength="5" placeholder="例：12345"></td>
           </tr>
           <tr data-seq="3">
-            <th><span class="seq">3</span>service_id<br><small>サービスID</small></th>
+            <th><span class="seq">3</span>service_id<span class="info-icon" data-note-key="service_id" tabindex="0" role="img"></span><br><small>サービスID</small></th>
             <td><input type="text" data-param="service_id" maxlength="3" placeholder="例：001"></td>
           </tr>
           <tr data-seq="4">
-            <th><span class="seq">4</span>cust_code<br><small>顧客ID</small></th>
+            <th><span class="seq">4</span>cust_code<span class="info-icon" data-note-key="cust_code" tabindex="0" role="img"></span><br><small>顧客ID</small></th>
             <td><input type="text" data-param="cust_code" maxlength="64"></td>
           </tr>
           <tr data-seq="5">
-            <th><span class="seq">5</span>sps_cust_no<br><small>SBPS顧客ID</small></th>
+            <th><span class="seq">5</span>sps_cust_no<span class="info-icon" data-note-key="sps_cust_no" tabindex="0" role="img"></span><br><small>SBPS顧客ID</small></th>
             <td><input type="text" data-param="sps_cust_no" maxlength="12"></td>
           </tr>
           <tr data-seq="6">
-            <th><span class="seq">6</span>sps_payment_no<br><small>支払方法管理番号</small></th>
+            <th><span class="seq">6</span>sps_payment_no<span class="info-icon" data-note-key="sps_payment_no" tabindex="0" role="img"></span><br><small>支払方法管理番号</small></th>
             <td><input type="text" data-param="sps_payment_no" maxlength="3"></td>
           </tr>
           <tr data-seq="7">
-            <th><span class="seq">7</span>order_id<br><small>購入ID</small></th>
+            <th><span class="seq">7</span>order_id<span class="info-icon" data-note-key="order_id" tabindex="0" role="img"></span><br><small>購入ID</small></th>
             <td><input type="text" data-param="order_id" maxlength="38"></td>
           </tr>
           <tr data-seq="8">
-            <th><span class="seq">8</span>item_id<br><small>商品ID</small></th>
+            <th><span class="seq">8</span>item_id<span class="info-icon" data-note-key="item_id" tabindex="0" role="img"></span><br><small>商品ID</small></th>
             <td><input type="text" data-param="item_id" maxlength="32"></td>
           </tr>
           <tr data-seq="9">
-            <th><span class="seq">9</span>pay_item_id<br><small>外部決済機関商品ID</small></th>
+            <th><span class="seq">9</span>pay_item_id<span class="info-icon" data-note-key="pay_item_id" tabindex="0" role="img"></span><br><small>外部決済機関商品ID</small></th>
             <td><input type="text" data-param="pay_item_id" maxlength="32"></td>
           </tr>
           <tr data-seq="10">
-            <th><span class="seq">10</span>item_name<br><small>商品名称</small></th>
+            <th><span class="seq">10</span>item_name<span class="info-icon" data-note-key="item_name" tabindex="0" role="img"></span><br><small>商品名称</small></th>
             <td><input type="text" data-param="item_name" maxlength="40"></td>
           </tr>
           <tr data-seq="11">
-            <th><span class="seq">11</span>tax<br><small>税額</small></th>
+            <th><span class="seq">11</span>tax<span class="info-icon" data-note-key="tax" tabindex="0" role="img"></span><br><small>税額</small></th>
             <td><input type="number" data-param="tax" min="0"></td>
           </tr>
           <tr data-seq="12">
-            <th><span class="seq">12</span>amount<br><small>金額（税込）</small></th>
+            <th><span class="seq">12</span>amount<span class="info-icon" data-note-key="amount" tabindex="0" role="img"></span><br><small>金額（税込）</small></th>
             <td><input type="number" data-param="amount" min="0"></td>
           </tr>
           <tr data-seq="13">
-            <th><span class="seq">13</span>pay_type<br><small>購入タイプ</small></th>
+            <th><span class="seq">13</span>pay_type<span class="info-icon" data-note-key="pay_type" tabindex="0" role="img"></span><br><small>購入タイプ</small></th>
             <td>
               <select data-param="pay_type">
                 <option value="">-- 選択してください --</option>
@@ -362,7 +428,7 @@
             </td>
           </tr>
           <tr data-seq="15">
-            <th><span class="seq">15</span>service_type<br><small>サービスタイプ</small></th>
+            <th><span class="seq">15</span>service_type<span class="info-icon" data-note-key="service_type" tabindex="0" role="img"></span><br><small>サービスタイプ</small></th>
             <td>
               <select data-param="service_type">
                 <option value="">-- 選択してください --</option>
@@ -372,7 +438,7 @@
             </td>
           </tr>
           <tr data-seq="20">
-            <th><span class="seq">20</span>terminal_type<br><small>顧客利用端末タイプ</small></th>
+            <th><span class="seq">20</span>terminal_type<span class="info-icon" data-note-key="terminal_type" tabindex="0" role="img"></span><br><small>顧客利用端末タイプ</small></th>
             <td>
               <select data-param="terminal_type">
                 <option value="">（省略時は0）</option>
@@ -383,35 +449,35 @@
             </td>
           </tr>
           <tr data-seq="21">
-            <th><span class="seq">21</span>success_url<br><small>決済完了時URL</small></th>
+            <th><span class="seq">21</span>success_url<span class="info-icon" data-note-key="success_url" tabindex="0" role="img"></span><br><small>決済完了時URL</small></th>
             <td><input type="text" data-param="success_url" placeholder="https://"></td>
           </tr>
           <tr data-seq="22">
-            <th><span class="seq">22</span>cancel_url<br><small>決済キャンセル時URL</small></th>
+            <th><span class="seq">22</span>cancel_url<span class="info-icon" data-note-key="cancel_url" tabindex="0" role="img"></span><br><small>決済キャンセル時URL</small></th>
             <td><input type="text" data-param="cancel_url" placeholder="https://"></td>
           </tr>
           <tr data-seq="23">
-            <th><span class="seq">23</span>error_url<br><small>エラー時URL</small></th>
+            <th><span class="seq">23</span>error_url<span class="info-icon" data-note-key="error_url" tabindex="0" role="img"></span><br><small>エラー時URL</small></th>
             <td><input type="text" data-param="error_url" placeholder="https://"></td>
           </tr>
           <tr data-seq="24">
-            <th><span class="seq">24</span>pagecon_url<br><small>決済通知用CGI</small></th>
+            <th><span class="seq">24</span>pagecon_url<span class="info-icon" data-note-key="pagecon_url" tabindex="0" role="img"></span><br><small>決済通知用CGI</small></th>
             <td><input type="text" data-param="pagecon_url" placeholder="https://"></td>
           </tr>
           <tr data-seq="25">
-            <th><span class="seq">25</span>free1<br><small>自由欄1</small></th>
+            <th><span class="seq">25</span>free1<span class="info-icon" data-note-key="free1" tabindex="0" role="img"></span><br><small>自由欄1</small></th>
             <td><input type="text" data-param="free1" maxlength="20"></td>
           </tr>
           <tr data-seq="26">
-            <th><span class="seq">26</span>free2<br><small>自由欄2</small></th>
+            <th><span class="seq">26</span>free2<span class="info-icon" data-note-key="free2" tabindex="0" role="img"></span><br><small>自由欄2</small></th>
             <td><input type="text" data-param="free2" maxlength="20"></td>
           </tr>
           <tr data-seq="27">
-            <th><span class="seq">27</span>free3<br><small>自由欄3</small></th>
+            <th><span class="seq">27</span>free3<span class="info-icon" data-note-key="free3" tabindex="0" role="img"></span><br><small>自由欄3</small></th>
             <td><input type="text" data-param="free3" maxlength="20"></td>
           </tr>
           <tr data-seq="28">
-            <th><span class="seq">28</span>free_csv<br><small>フリー項目</small></th>
+            <th><span class="seq">28</span>free_csv<span class="info-icon" data-note-key="free_csv" tabindex="0" role="img"></span><br><small>フリー項目</small></th>
             <td><textarea data-param="free_csv" rows="3"></textarea></td>
           </tr>
         </tbody>
@@ -430,7 +496,7 @@
       <table>
         <tbody>
           <tr data-seq="38">
-            <th><span class="seq">38</span>request_date<br><small>リクエスト日時</small></th>
+            <th><span class="seq">38</span>request_date<span class="info-icon" data-note-key="request_date" tabindex="0" role="img"></span><br><small>リクエスト日時</small></th>
             <td>
               <div class="stack">
                 <input type="text" data-param="request_date" id="request-date" placeholder="YYYYMMDDHHMMSS" maxlength="14">
@@ -440,11 +506,11 @@
             </td>
           </tr>
           <tr data-seq="39">
-            <th><span class="seq">39</span>limit_second<br><small>リクエスト許容時間</small></th>
+            <th><span class="seq">39</span>limit_second<span class="info-icon" data-note-key="limit_second" tabindex="0" role="img"></span><br><small>リクエスト許容時間</small></th>
             <td><input type="number" data-param="limit_second" id="limit-second" min="0" placeholder="例：600"></td>
           </tr>
           <tr data-seq="40">
-            <th><span class="seq">40</span>sps_hashcode<br><small>チェックサム</small></th>
+            <th><span class="seq">40</span>sps_hashcode<span class="info-icon" data-note-key="sps_hashcode" tabindex="0" role="img"></span><br><small>チェックサム</small></th>
             <td><input type="text" data-param="sps_hashcode" maxlength="40"></td>
           </tr>
         </tbody>
@@ -509,31 +575,31 @@
   <div class="detail-row">
     <h3><span class="detail-index"></span>件目</h3>
     <div class="detail-grid">
-      <label class="inline-label">SEQ29 dtl_rowno
+      <label class="inline-label">SEQ29 dtl_rowno<span class="info-icon" data-note-key="dtl_rowno" tabindex="0" role="img"></span>
         <input type="text" data-param="dtl_rowno" maxlength="3">
       </label>
-      <label class="inline-label">SEQ30 dtl_item_id
+      <label class="inline-label">SEQ30 dtl_item_id<span class="info-icon" data-note-key="dtl_item_id" tabindex="0" role="img"></span>
         <input type="text" data-param="dtl_item_id" maxlength="20">
       </label>
-      <label class="inline-label">SEQ31 dtl_item_name
+      <label class="inline-label">SEQ31 dtl_item_name<span class="info-icon" data-note-key="dtl_item_name" tabindex="0" role="img"></span>
         <input type="text" data-param="dtl_item_name" maxlength="40">
       </label>
-      <label class="inline-label">SEQ32 dtl_item_count
+      <label class="inline-label">SEQ32 dtl_item_count<span class="info-icon" data-note-key="dtl_item_count" tabindex="0" role="img"></span>
         <input type="number" data-param="dtl_item_count" min="0">
       </label>
-      <label class="inline-label">SEQ33 dtl_tax
+      <label class="inline-label">SEQ33 dtl_tax<span class="info-icon" data-note-key="dtl_tax" tabindex="0" role="img"></span>
         <input type="number" data-param="dtl_tax" min="0">
       </label>
-      <label class="inline-label">SEQ34 dtl_amount
+      <label class="inline-label">SEQ34 dtl_amount<span class="info-icon" data-note-key="dtl_amount" tabindex="0" role="img"></span>
         <input type="number" data-param="dtl_amount" min="0">
       </label>
-      <label class="inline-label">SEQ35 dtl_free1
+      <label class="inline-label">SEQ35 dtl_free1<span class="info-icon" data-note-key="dtl_free1" tabindex="0" role="img"></span>
         <textarea data-param="dtl_free1" rows="2"></textarea>
       </label>
-      <label class="inline-label">SEQ36 dtl_free2
+      <label class="inline-label">SEQ36 dtl_free2<span class="info-icon" data-note-key="dtl_free2" tabindex="0" role="img"></span>
         <textarea data-param="dtl_free2" rows="2"></textarea>
       </label>
-      <label class="inline-label">SEQ37 dtl_free3
+      <label class="inline-label">SEQ37 dtl_free3<span class="info-icon" data-note-key="dtl_free3" tabindex="0" role="img"></span>
         <textarea data-param="dtl_free3" rows="2"></textarea>
       </label>
     </div>
@@ -585,6 +651,44 @@
     { seq: 37, name: 'dtl_free3' }
   ];
 
+  const PARAM_NOTES = {
+    pay_method: '支払方法を指定します。（複数指定可）',
+    merchant_id: '当社で払い出します。',
+    service_id: '当社で払い出します。',
+    cust_code: 'マーチャント ID とサービス ID の組み合わせに対してユニーク（一意）な値としてください。決済情報保管時の紐付けキーとなるため、必ず顧客別に払い出してください。',
+    sps_cust_no: '当連携モデルの場合は未設定（空文字）です。',
+    sps_payment_no: '当連携モデルの場合は未設定（空文字）です。',
+    order_id: 'マーチャント ID とサービス ID の組み合わせに対してユニーク（一意）な値としてください。※継続課金（簡易）の解約の場合も一意の ID を設定してください。',
+    item_id: '',
+    pay_item_id: '当連携モデルの場合は未設定（空文字）です。',
+    item_name: '日本語、英数半角混在可能です。文字数オーバー時は切捨します。文字化け時は「？」に置換します。※設定されない場合は、購入内容確認画面において商品名の項目自体が表示されません。NP後払いの場合は必須項目となります。Pay-easy決済では以下の文字種は使用不可です。\n*(アスタリスク)、\n_(アンダーバー)、\n@(アットマーク)',
+    tax: '0 円以上を設定してください。※総合振込決済のみ必須です。',
+    amount: '0 円以上を設定してください。',
+    pay_type: '',
+    service_type: '',
+    terminal_type: '省略の場合”0″を適用します。\n※詳細は基本仕様 要求の端末タイプの設定をご参照ください。',
+    success_url: '',
+    cancel_url: '',
+    error_url: '',
+    pagecon_url: 'SSL 通信が必須となります。',
+    free1: '日本語、英数半角混在可能です。文字数オーバー時は切捨します。文字化け時は「？」に置換します。',
+    free2: '日本語、英数半角混在可能です。文字数オーバー時は切捨します。文字化け時は「？」に置換します。',
+    free3: '日本語、英数半角混在可能です。文字数オーバー時は切捨します。文字化け時は「？」に置換します。',
+    free_csv: '決済固有タグ「free_csv」についてを参照ください。',
+    dtl_rowno: '明細行を利用する場合は必須です。1ずつインクリメントさせてください。※明細行最大件数は 999 明細です。',
+    dtl_item_id: '他明細内の明細商品 ID で、いずれか一つに設定されていた場合は、必須となります。',
+    dtl_item_name: '日本語、英数半角混在可能です。文字数オーバー時は切捨します。文字化け時は「？」に置換します。他明細内の明細商品名称で、いずれか一つに設定されていた場合は、必須となります。NP後払いの場合は明細を設定する場合には必須項目となります。Pay-easy決済では以下の文字種は使用不可です。\n*(アスタリスク)、\n_(アンダーバー)、\n@(アットマーク)',
+    dtl_item_count: '他明細内の明細数量で、いずれか一つに設定されていた場合は、必須となります。NP後払いの場合は明細を設定する場合には必須項目となります。',
+    dtl_tax: '',
+    dtl_amount: '他明細内の明細金額（税込）で、いずれか一つに設定されていた場合は、必須となります。NP後払いの場合は明細を設定する場合には必須項目となります。',
+    dtl_free1: '※当社決済システムへの格納は行わない項目になります。ご利用の際は、当社営業にご確認下さい。',
+    dtl_free2: '※当社決済システムへの格納は行わない項目になります。ご利用の際は、当社営業にご確認下さい。',
+    dtl_free3: '※当社決済システムへの格納は行わない項目になります。ご利用の際は、当社営業にご確認下さい。',
+    request_date: '本機能を加盟店がリクエストした日時です。',
+    limit_second: '省略時は規定値（600）を適用します。',
+    sps_hashcode: '基本仕様 チェックサム値の生成方法についてをご参照ください。'
+  };
+
   const form = document.getElementById('request-form');
   const detailContainer = document.getElementById('detail-rows');
   const detailTemplate = document.getElementById('detail-template');
@@ -627,12 +731,24 @@
     ].join('');
   }
 
+  function applyTooltips(root = document) {
+    root.querySelectorAll('.info-icon[data-note-key]').forEach((icon) => {
+      const key = icon.dataset.noteKey;
+      const note = Object.prototype.hasOwnProperty.call(PARAM_NOTES, key) ? PARAM_NOTES[key] : '';
+      const message = note && note.trim() ? note : '備考情報はありません。';
+      icon.textContent = 'i';
+      icon.setAttribute('data-tooltip', message);
+      icon.setAttribute('aria-label', message);
+      icon.setAttribute('title', message);
+    });
+  }
+
   function addDetailRow(defaults = {}) {
     const fragment = detailTemplate.content.cloneNode(true);
-    const row = fragment.querySelector('.detail-row');
     detailContainer.appendChild(fragment);
     updateDetailRowIndexes();
     const insertedRow = detailContainer.lastElementChild;
+    applyTooltips(insertedRow);
     insertedRow.querySelectorAll('[data-param]').forEach((input) => {
       const name = input.dataset.param;
       if (Object.prototype.hasOwnProperty.call(defaults, name)) {
@@ -840,6 +956,7 @@
   }
 
   // 初期化
+  applyTooltips(document);
   resetForm();
 </script>
 </body>
