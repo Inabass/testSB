@@ -78,6 +78,46 @@
       color: #2563eb;
     }
 
+    .requirement-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      line-height: 1;
+      vertical-align: middle;
+      border: 1px solid transparent;
+    }
+
+    .requirement-badge.req-required {
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+
+    .requirement-badge.req-conditional {
+      background: #fef9c3;
+      border-color: #fde68a;
+      color: #b45309;
+    }
+
+    .requirement-badge.req-optional {
+      background: #e0f2fe;
+      border-color: #bae6fd;
+      color: #0369a1;
+    }
+
+    .requirement-legend {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 16px;
+      font-size: 0.85rem;
+      color: #4b5563;
+    }
+
     .info-icon {
       display: inline-flex;
       align-items: center;
@@ -362,6 +402,12 @@
 <main>
   <h1>購入要求パラメータ検証ツール</h1>
   <form id="request-form">
+    <div class="requirement-legend">
+      <span>バッジ凡例：</span>
+      <span class="requirement-badge req-required">必須</span>
+      <span class="requirement-badge req-conditional">条件付必須</span>
+      <span class="requirement-badge req-optional">任意</span>
+    </div>
     <fieldset>
       <legend>基本パラメータ（SEQ 1〜28）</legend>
       <table>
@@ -651,6 +697,50 @@
     { seq: 37, name: 'dtl_free3' }
   ];
 
+  const REQUIREMENT_META = {
+    required: { label: '必須', className: 'req-required', description: '必須項目です。' },
+    conditional: { label: '条件付必須', className: 'req-conditional', description: '条件によって必須となる項目です。' },
+    optional: { label: '任意', className: 'req-optional', description: '任意項目です。' }
+  };
+
+  const PARAM_REQUIREMENTS = {
+    pay_method: 'conditional',
+    merchant_id: 'required',
+    service_id: 'required',
+    cust_code: 'required',
+    sps_cust_no: 'optional',
+    sps_payment_no: 'optional',
+    order_id: 'required',
+    item_id: 'required',
+    pay_item_id: 'optional',
+    item_name: 'conditional',
+    tax: 'conditional',
+    amount: 'required',
+    pay_type: 'required',
+    service_type: 'required',
+    terminal_type: 'optional',
+    success_url: 'required',
+    cancel_url: 'required',
+    error_url: 'required',
+    pagecon_url: 'required',
+    free1: 'optional',
+    free2: 'optional',
+    free3: 'optional',
+    free_csv: 'optional',
+    dtl_rowno: 'conditional',
+    dtl_item_id: 'conditional',
+    dtl_item_name: 'conditional',
+    dtl_item_count: 'conditional',
+    dtl_tax: 'optional',
+    dtl_amount: 'conditional',
+    dtl_free1: 'optional',
+    dtl_free2: 'optional',
+    dtl_free3: 'optional',
+    request_date: 'required',
+    limit_second: 'optional',
+    sps_hashcode: 'required'
+  };
+
   const PARAM_NOTES = {
     pay_method: '支払方法を指定します。（複数指定可）',
     merchant_id: '当社で払い出します。',
@@ -740,7 +830,29 @@
       icon.setAttribute('data-tooltip', message);
       icon.setAttribute('aria-label', message);
       icon.setAttribute('title', message);
+      applyRequirementBadge(icon, key);
     });
+  }
+
+  function applyRequirementBadge(icon, key) {
+    const requirementKey = Object.prototype.hasOwnProperty.call(PARAM_REQUIREMENTS, key)
+      ? PARAM_REQUIREMENTS[key]
+      : 'optional';
+    const meta = Object.prototype.hasOwnProperty.call(REQUIREMENT_META, requirementKey)
+      ? REQUIREMENT_META[requirementKey]
+      : REQUIREMENT_META.optional;
+    let badge = icon.parentNode.querySelector(`.requirement-badge[data-for="${key}"]`);
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.classList.add('requirement-badge');
+      badge.dataset.for = key;
+      icon.parentNode.insertBefore(badge, icon);
+    }
+    badge.textContent = meta.label;
+    badge.classList.remove('req-required', 'req-conditional', 'req-optional');
+    badge.classList.add(meta.className);
+    badge.setAttribute('aria-label', meta.description);
+    badge.setAttribute('title', meta.description);
   }
 
   function addDetailRow(defaults = {}) {
