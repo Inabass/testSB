@@ -966,10 +966,9 @@
     for (const def of PARAM_DEFS) {
       const field = document.querySelector(`[data-param="${def.name}"]`);
       if (!field) continue;
-      const rawValue = field.value ?? '';
-      const value = rawValue.trim();
-      if (!includeEmpty && value === '') continue;
-      params.push({ ...def, value });
+      const { raw, trimmed } = extractFieldValues(field);
+      if (!includeEmpty && trimmed === '') continue;
+      params.push({ ...def, value: raw, hashValue: trimmed });
     }
 
     const detailRows = Array.from(detailContainer.querySelectorAll('.detail-row'));
@@ -980,32 +979,68 @@
       DETAIL_DEFS.forEach((def) => {
         const field = row.querySelector(`[data-param="${def.name}"]`);
         if (!field) return;
-        const rawValue = field.value ?? '';
-        const value = rawValue.trim();
-        if (value !== '') {
+        const { raw, trimmed } = extractFieldValues(field);
+        if (trimmed !== '') {
           rowHasValue = true;
         }
-        if (!includeEmpty && value === '') return;
-        rowParams.push({ seq: def.seq, name: def.name, value, detailIndex: rowIndex + 1 });
+        if (!includeEmpty && trimmed === '') return;
+        rowParams.push({
+          seq: def.seq,
+          name: def.name,
+          value: raw,
+          hashValue: trimmed,
+          detailIndex: rowIndex + 1
+        });
       });
 
-      if (!rowHasValue) {
+      if (!rowHasValue && !includeEmpty) {
         return;
       }
 
-      params.push(...rowParams);
+      if (rowHasValue || includeEmpty) {
+        params.push(...rowParams);
+      }
     });
 
     params.sort((a, b) => {
-      if (a.seq === b.seq) {
-        const ai = a.detailIndex ?? 0;
-        const bi = b.detailIndex ?? 0;
-        return ai - bi;
+      const aIsDetail = Number.isInteger(a.detailIndex);
+      const bIsDetail = Number.isInteger(b.detailIndex);
+
+      if (aIsDetail && bIsDetail) {
+        if (a.detailIndex !== b.detailIndex) {
+          return a.detailIndex - b.detailIndex;
+        }
+        if (a.seq !== b.seq) {
+          return a.seq - b.seq;
+        }
+        return 0;
       }
-      return a.seq - b.seq;
+
+      if (aIsDetail !== bIsDetail) {
+        if (a.seq !== b.seq) {
+          return a.seq - b.seq;
+        }
+        return aIsDetail ? 1 : -1;
+      }
+
+      if (a.seq !== b.seq) {
+        return a.seq - b.seq;
+      }
+
+      return 0;
     });
 
     return params;
+  }
+
+  function extractFieldValues(field) {
+    const raw = field.value ?? '';
+    const trimmed = trimHalfWidthSpaces(raw);
+    return { raw, trimmed };
+  }
+
+  function trimHalfWidthSpaces(value) {
+    return value.replace(/^[ ]+|[ ]+$/g, '');
   }
 
   function findMissingRequiredFields() {
@@ -1015,7 +1050,7 @@
       if (requirement !== 'required') continue;
       const field = document.querySelector(`[data-param="${def.name}"]`);
       if (!field) continue;
-      const value = (field.value ?? '').trim();
+      const value = trimHalfWidthSpaces(field.value ?? '');
       if (value === '') {
         missing.push(def);
       }
@@ -1215,7 +1250,7 @@
   async function calculateHash() {
     const secret = hashSecret.value || '';
     const params = collectParameters({ includeEmpty: true }).filter((param) => param.name !== 'sps_hashcode');
-    const base = params.map((param) => param.value).join('') + secret;
+    const base = params.map((param) => param.hashValue).join('') + trimHalfWidthSpaces(secret);
     hashString.textContent = base;
 
     if (!window.crypto || !window.crypto.subtle) {
