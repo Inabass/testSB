@@ -1071,12 +1071,26 @@
   }
 
   function sendRequest() {
-    const temporalMessages = ensureTemporalDefaults();
+    const temporalResult = ensureTemporalDefaults();
+    const temporalMessages = temporalResult.messages;
     const missingRequired = findMissingRequiredFields();
     markMissingRequiredFields(missingRequired);
     if (missingRequired.length > 0) {
       const message = formatRequiredMessage(missingRequired);
       alert(`以下の必須項目を入力してください:\n${message}`);
+      return;
+    }
+
+    if (temporalResult.requestDateUpdated) {
+      const hashField = document.querySelector('[data-param="sps_hashcode"]');
+      if (hashField) {
+        hashField.value = '';
+        hashField.classList.add('field-error');
+      }
+      const combined = temporalMessages.concat(
+        'リクエスト日時を更新したため、チェックサム（sps_hashcode）を再計算してから再送信してください。'
+      );
+      alert(combined.join('\n'));
       return;
     }
 
@@ -1113,6 +1127,7 @@
 
   function ensureTemporalDefaults() {
     const messages = [];
+    let requestDateUpdated = false;
     const nowString = formatNow();
     const trimmedLimit = (limitSecondField.value || '').trim();
     let limit = Number.parseInt(trimmedLimit, 10);
@@ -1137,6 +1152,7 @@
       requestDateField.classList.remove('field-error');
       candidate = parseRequestDate(nowString);
       messages.push('リクエスト日時が未設定または不正だったため現在時刻に更新しました。');
+      requestDateUpdated = true;
     }
 
     if (candidate) {
@@ -1146,10 +1162,11 @@
         requestDateField.value = nowString;
         candidate = parseRequestDate(nowString);
         messages.push('リクエスト日時と現在時刻の差が許容時間を超えていたため更新しました。');
+        requestDateUpdated = true;
       }
     }
 
-    return messages;
+    return { messages, requestDateUpdated };
   }
 
   function parseRequestDate(value) {
