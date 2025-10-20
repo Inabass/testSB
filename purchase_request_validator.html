@@ -595,6 +595,15 @@
   </section>
 
   <section class="helper-card">
+    <h2>type="hidden" フォーム HTML</h2>
+    <p class="note">現在のパラメータをすべて hidden 要素に展開したフォーム HTML を生成します。送信先や入力値を確認した上でご利用ください。</p>
+    <pre id="hidden-form-html"></pre>
+    <div class="actions">
+      <button type="button" id="copy-hidden-form-html" class="secondary small">HTML をコピー</button>
+    </div>
+  </section>
+
+  <section class="helper-card">
     <h2>SHA-1 チェックサム支援</h2>
     <p class="note">フォームに入力済みの値（sps_hashcode を除く）を SEQ 順に連結し、末尾にシークレットキーを付けて UTF-8 へ変換し、SHA-1 を計算します。値の前後にある半角スペースは除去されます。購入結果（画面返却）のチェックサムは Shift-JIS で計算される点にご注意ください。</p>
     <div class="stack">
@@ -829,11 +838,14 @@
     sps_hashcode: '基本仕様 チェックサム値の生成方法についてをご参照ください。'
   };
 
+  const FORM_ACTION_URL = 'https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do';
+
   const form = document.getElementById('request-form');
   const detailContainer = document.getElementById('detail-rows');
   const detailTemplate = document.getElementById('detail-template');
   const resultTable = document.getElementById('result-table');
   const resultQuery = document.getElementById('result-query');
+  const hiddenFormHtml = document.getElementById('hidden-form-html');
   const hashString = document.getElementById('hash-string');
   const hashResult = document.getElementById('hash-result');
   const hashSecret = document.getElementById('hash-secret');
@@ -848,6 +860,7 @@
     requestDateField.classList.remove('field-error');
   });
   document.getElementById('copy-query').addEventListener('click', () => copyToClipboard(resultQuery.textContent));
+  document.getElementById('copy-hidden-form-html').addEventListener('click', () => copyToClipboard(hiddenFormHtml.textContent));
   document.getElementById('calc-hash').addEventListener('click', calculateHash);
   document.getElementById('copy-hash').addEventListener('click', () => copyToClipboard(hashResult.textContent));
   document.getElementById('apply-query').addEventListener('click', applyQueryString);
@@ -860,6 +873,7 @@
     const params = collectParameters({ includeEmpty: true });
     renderResultTable(params);
     renderQuery(params);
+    renderHiddenFormHtml(params);
   });
 
   function formatNow() {
@@ -950,6 +964,7 @@
     detailContainer.innerHTML = '';
     resultTable.innerHTML = '';
     resultQuery.textContent = '';
+    hiddenFormHtml.textContent = '';
     hashString.textContent = '';
     hashResult.textContent = '';
     requestDateField.value = formatNow();
@@ -1105,6 +1120,23 @@
     resultQuery.textContent = query;
   }
 
+  function renderHiddenFormHtml(params) {
+    if (!Array.isArray(params) || params.length === 0) {
+      hiddenFormHtml.textContent = '';
+      return;
+    }
+
+    const lines = [`<form action="${escapeHtmlAttribute(FORM_ACTION_URL)}" method="POST">`];
+    params.forEach((param) => {
+      const nameAttr = escapeHtmlAttribute(param.name);
+      const valueAttr = escapeHtmlAttribute(param.value);
+      lines.push(`  <input type="hidden" name="${nameAttr}" value="${valueAttr}">`);
+    });
+    lines.push('  <input type="submit" value="submit">');
+    lines.push('</form>');
+    hiddenFormHtml.textContent = lines.join('\n');
+  }
+
   function sendRequest() {
     const temporalResult = ensureTemporalDefaults();
     const temporalMessages = temporalResult.messages;
@@ -1141,8 +1173,10 @@
 
     renderResultTable(params);
     renderQuery(params);
+    renderHiddenFormHtml(params);
 
     const proxyForm = document.getElementById('submit-proxy');
+    proxyForm.setAttribute('action', FORM_ACTION_URL);
     proxyForm.innerHTML = '';
 
     params.forEach((param) => {
@@ -1342,6 +1376,17 @@
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;')
       .replace(/\n/g, '<br>');
+  }
+
+  function escapeHtmlAttribute(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/'/g, '&#39;')
+      .replace(/\r/g, '&#13;')
+      .replace(/\n/g, '&#10;');
   }
 
   // 初期化
