@@ -856,6 +856,7 @@
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    ensureTemporalDefaults();
     const params = collectParameters();
     renderResultTable(params);
     renderQuery(params);
@@ -864,13 +865,16 @@
   function formatNow() {
     const now = new Date();
     const pad = (v) => String(v).padStart(2, '0');
+    const jstOffsetMinutes = 9 * 60;
+    const localOffsetMinutes = now.getTimezoneOffset();
+    const jst = new Date(now.getTime() + (jstOffsetMinutes + localOffsetMinutes) * 60 * 1000);
     return [
-      now.getFullYear(),
-      pad(now.getMonth() + 1),
-      pad(now.getDate()),
-      pad(now.getHours()),
-      pad(now.getMinutes()),
-      pad(now.getSeconds())
+      jst.getUTCFullYear(),
+      pad(jst.getUTCMonth() + 1),
+      pad(jst.getUTCDate()),
+      pad(jst.getUTCHours()),
+      pad(jst.getUTCMinutes()),
+      pad(jst.getUTCSeconds())
     ].join('');
   }
 
@@ -1051,12 +1055,17 @@
   }
 
   function sendRequest() {
+    const temporalMessages = ensureTemporalDefaults();
     const missingRequired = findMissingRequiredFields();
     markMissingRequiredFields(missingRequired);
     if (missingRequired.length > 0) {
       const message = formatRequiredMessage(missingRequired);
       alert(`以下の必須項目を入力してください:\n${message}`);
       return;
+    }
+
+    if (temporalMessages.length > 0) {
+      alert(temporalMessages.join('\n'));
     }
 
     const params = collectParameters();
@@ -1084,6 +1093,90 @@
     } else {
       proxyForm.submit();
     }
+  }
+
+  function ensureTemporalDefaults() {
+    const messages = [];
+    const nowString = formatNow();
+    const trimmedLimit = (limitSecondField.value || '').trim();
+    let limit = Number.parseInt(trimmedLimit, 10);
+
+    if (trimmedLimit === '' || Number.isNaN(limit)) {
+      limit = 600;
+      limitSecondField.value = '600';
+      limitSecondField.classList.remove('field-error');
+      messages.push('リクエスト許容時間が未設定だったため 600 秒に更新しました。');
+    } else if (limit < 0) {
+      limit = 600;
+      limitSecondField.value = '600';
+      limitSecondField.classList.remove('field-error');
+      messages.push('リクエスト許容時間が負の値だったため 600 秒に更新しました。');
+    }
+
+    const trimmedRequest = (requestDateField.value || '').trim();
+    let candidate = parseRequestDate(trimmedRequest);
+
+    if (!candidate) {
+      requestDateField.value = nowString;
+      requestDateField.classList.remove('field-error');
+      candidate = parseRequestDate(nowString);
+      messages.push('リクエスト日時が未設定または不正だったため現在時刻に更新しました。');
+    }
+
+    if (candidate) {
+      const now = new Date();
+      const diffSeconds = Math.abs((now.getTime() - candidate.getTime()) / 1000);
+      if (Number.isFinite(limit) && diffSeconds > limit) {
+        requestDateField.value = nowString;
+        candidate = parseRequestDate(nowString);
+        messages.push('リクエスト日時と現在時刻の差が許容時間を超えていたため更新しました。');
+      }
+    }
+
+    return messages;
+  }
+
+  function parseRequestDate(value) {
+    if (!/^\d{14}$/.test(value)) {
+      return null;
+    }
+
+    const year = Number.parseInt(value.slice(0, 4), 10);
+    const month = Number.parseInt(value.slice(4, 6), 10);
+    const day = Number.parseInt(value.slice(6, 8), 10);
+    const hour = Number.parseInt(value.slice(8, 10), 10);
+    const minute = Number.parseInt(value.slice(10, 12), 10);
+    const second = Number.parseInt(value.slice(12, 14), 10);
+
+    if (
+      Number.isNaN(year) ||
+      Number.isNaN(month) ||
+      Number.isNaN(day) ||
+      Number.isNaN(hour) ||
+      Number.isNaN(minute) ||
+      Number.isNaN(second)
+    ) {
+      return null;
+    }
+
+    const jstOffsetMs = 9 * 60 * 60 * 1000;
+    const utcMillis = Date.UTC(year, month - 1, day, hour, minute, second) - jstOffsetMs;
+    const date = new Date(utcMillis);
+
+    const check = new Date(date.getTime() + jstOffsetMs);
+
+    if (
+      check.getUTCFullYear() !== year ||
+      check.getUTCMonth() + 1 !== month ||
+      check.getUTCDate() !== day ||
+      check.getUTCHours() !== hour ||
+      check.getUTCMinutes() !== minute ||
+      check.getUTCSeconds() !== second
+    ) {
+      return null;
+    }
+
+    return date;
   }
 
   async function calculateHash() {
