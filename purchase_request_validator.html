@@ -857,7 +857,7 @@
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     ensureTemporalDefaults();
-    const params = collectParameters();
+    const params = collectParameters({ includeEmpty: true });
     renderResultTable(params);
     renderQuery(params);
   });
@@ -959,25 +959,41 @@
     clearFieldErrors();
   }
 
-  function collectParameters() {
+  function collectParameters(options = {}) {
+    const { includeEmpty = false } = options;
     const params = [];
+
     for (const def of PARAM_DEFS) {
       const field = document.querySelector(`[data-param="${def.name}"]`);
       if (!field) continue;
-      const value = (field.value ?? '').trim();
-      if (value === '') continue;
+      const rawValue = field.value ?? '';
+      const value = rawValue.trim();
+      if (!includeEmpty && value === '') continue;
       params.push({ ...def, value });
     }
 
     const detailRows = Array.from(detailContainer.querySelectorAll('.detail-row'));
     detailRows.forEach((row, rowIndex) => {
+      const rowParams = [];
+      let rowHasValue = false;
+
       DETAIL_DEFS.forEach((def) => {
         const field = row.querySelector(`[data-param="${def.name}"]`);
         if (!field) return;
-        const value = (field.value ?? '').trim();
-        if (value === '') return;
-        params.push({ seq: def.seq, name: def.name, value, detailIndex: rowIndex + 1 });
+        const rawValue = field.value ?? '';
+        const value = rawValue.trim();
+        if (value !== '') {
+          rowHasValue = true;
+        }
+        if (!includeEmpty && value === '') return;
+        rowParams.push({ seq: def.seq, name: def.name, value, detailIndex: rowIndex + 1 });
       });
+
+      if (!rowHasValue) {
+        return;
+      }
+
+      params.push(...rowParams);
     });
 
     params.sort((a, b) => {
@@ -1068,7 +1084,7 @@
       alert(temporalMessages.join('\n'));
     }
 
-    const params = collectParameters();
+    const params = collectParameters({ includeEmpty: true });
     if (params.length === 0) {
       alert('送信するパラメータがありません。');
       return;
@@ -1181,7 +1197,7 @@
 
   async function calculateHash() {
     const secret = hashSecret.value || '';
-    const params = collectParameters().filter((param) => param.name !== 'sps_hashcode');
+    const params = collectParameters({ includeEmpty: true }).filter((param) => param.name !== 'sps_hashcode');
     const base = params.map((param) => param.value).join('') + secret;
     hashString.textContent = base;
 
